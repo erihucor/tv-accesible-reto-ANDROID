@@ -10,6 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.fillMaxSize
 import android.content.pm.ActivityInfo
 
+import androidx.compose.runtime.SideEffect
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+
 private const val STREAM_URL =
     "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
 
@@ -21,7 +26,18 @@ class MainActivity : ComponentActivity() {
         // Forzar orientación horizontal
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
+        // Solo setea decorfits antes de Compose
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
+            // Oculta status bar y navegación en Compose
+            SideEffect {
+                val controller = WindowInsetsControllerCompat(window, window.decorView)
+                controller.hide(WindowInsetsCompat.Type.systemBars())
+                controller.systemBarsBehavior =
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+
             VideoPlayer()
         }
     }
