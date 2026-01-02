@@ -3,45 +3,51 @@ package com.example.tvaccesibleandroid
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.tvaccesibleandroid.ui.theme.TVAccesibleAndroidTheme
+
+import androidx.compose.foundation.layout.fillMaxSize
+
+private const val STREAM_URL =
+    "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContent {
-            TVAccesibleAndroidTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            VideoPlayer()
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun VideoPlayer() {
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TVAccesibleAndroidTheme {
-        Greeting("Android")
+    val context = androidx.compose.ui.platform.LocalContext.current
+
+    val player = remember {
+        androidx.media3.exoplayer.ExoPlayer.Builder(context).build().apply {
+            setMediaItem(
+                androidx.media3.common.MediaItem.fromUri(STREAM_URL)
+            )
+            prepare()
+            playWhenReady = true
+        }
     }
+
+    DisposableEffect(Unit) {
+        onDispose { player.release() }
+    }
+
+    AndroidView(
+        modifier = androidx.compose.ui.Modifier.fillMaxSize(),
+        factory = {
+            androidx.media3.ui.PlayerView(it).apply {
+                this.player = player
+            }
+        }
+    )
 }
