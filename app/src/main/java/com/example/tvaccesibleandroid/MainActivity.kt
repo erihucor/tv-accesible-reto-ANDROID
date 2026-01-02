@@ -8,6 +8,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.runtime.Composable
 
 import androidx.compose.foundation.layout.fillMaxSize
+import android.content.pm.ActivityInfo
 
 private const val STREAM_URL =
     "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
@@ -16,6 +17,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Forzar orientación horizontal
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
         setContent {
             VideoPlayer()
