@@ -17,6 +17,12 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.tvaccesibleandroid.data.ChannelsProvider
+import com.example.tvaccesibleandroid.model.Channel
+
+import android.util.Log
+import androidx.compose.runtime.remember
+import androidx.media3.common.Player
+import androidx.media3.common.PlaybackException
 
 private const val CHANNEL_ON_STREAM = "ecuavisa"
 
@@ -33,7 +39,6 @@ class MainActivity : ComponentActivity() {
 
         //Set el canal a usar
         val channel = ChannelsProvider.getById(CHANNEL_ON_STREAM) ?: return
-        val streamUrl = channel.url
 
         setContent {
             // Oculta status bar y navegación en Compose
@@ -44,17 +49,29 @@ class MainActivity : ComponentActivity() {
                     WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }
 
-            VideoPlayer(streamUrl)
+            VideoPlayer(channel)
         }
     }
 }
 
 @Composable
-fun VideoPlayer(streamUrl: String) {
+fun VideoPlayer(channel: Channel) {
 
     val context = androidx.compose.ui.platform.LocalContext.current
 
-    val player = remember { ExoPlayer.Builder(context).build() }
+    val player = remember {
+        ExoPlayer.Builder(context).build().apply {
+
+            addListener(object : Player.Listener {
+                override fun onPlayerError(error: PlaybackException) {
+                    Log.e("PLAYER", "Error reproduciendo stream", error)
+                }
+            })
+        }
+    }
+
+
+    val streamUrl = channel.url
 
     LaunchedEffect(streamUrl) {
         player.setMediaItem(MediaItem.fromUri(streamUrl))
