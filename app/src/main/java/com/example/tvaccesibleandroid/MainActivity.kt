@@ -14,6 +14,8 @@ import androidx.compose.runtime.SideEffect
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
 import com.example.tvaccesibleandroid.data.ChannelsProvider
 
 private const val CHANNEL_ON_STREAM = "ecuavisa"
@@ -52,14 +54,12 @@ fun VideoPlayer(streamUrl: String) {
 
     val context = androidx.compose.ui.platform.LocalContext.current
 
-    val player = remember {
-        androidx.media3.exoplayer.ExoPlayer.Builder(context).build().apply {
-            setMediaItem(
-                androidx.media3.common.MediaItem.fromUri(streamUrl)
-            )
-            prepare()
-            playWhenReady = true
-        }
+    val player = remember { ExoPlayer.Builder(context).build() }
+
+    LaunchedEffect(streamUrl) {
+        player.setMediaItem(MediaItem.fromUri(streamUrl))
+        player.prepare()
+        player.play()
     }
 
     DisposableEffect(Unit) {
