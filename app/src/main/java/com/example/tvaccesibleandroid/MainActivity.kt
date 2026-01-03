@@ -14,9 +14,9 @@ import androidx.compose.runtime.SideEffect
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.example.tvaccesibleandroid.data.ChannelsProvider
 
-private const val STREAM_URL =
-    "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+private const val CHANNEL_ON_STREAM = "ecuavisa"
 
 class MainActivity : ComponentActivity() {
 
@@ -29,6 +29,10 @@ class MainActivity : ComponentActivity() {
         // Solo setea decorfits antes de Compose
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+        //Set el canal a usar
+        val channel = ChannelsProvider.getById(CHANNEL_ON_STREAM) ?: return
+        val streamUrl = channel.url
+
         setContent {
             // Oculta status bar y navegación en Compose
             SideEffect {
@@ -38,20 +42,20 @@ class MainActivity : ComponentActivity() {
                     WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }
 
-            VideoPlayer()
+            VideoPlayer(streamUrl)
         }
     }
 }
 
 @Composable
-fun VideoPlayer() {
+fun VideoPlayer(streamUrl: String) {
 
     val context = androidx.compose.ui.platform.LocalContext.current
 
     val player = remember {
         androidx.media3.exoplayer.ExoPlayer.Builder(context).build().apply {
             setMediaItem(
-                androidx.media3.common.MediaItem.fromUri(STREAM_URL)
+                androidx.media3.common.MediaItem.fromUri(streamUrl)
             )
             prepare()
             playWhenReady = true
