@@ -20,6 +20,7 @@ import com.example.tvaccesibleandroid.data.ChannelsProvider
 import com.example.tvaccesibleandroid.model.Channel
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.remember
 import androidx.media3.common.Player
 import androidx.media3.common.PlaybackException
@@ -88,10 +89,26 @@ fun VideoPlayer(
             addListener(object : Player.Listener {
                 override fun onPlayerError(error: PlaybackException) {
                     Log.e("PLAYER", "Error reproduciendo stream", error)
+
+                    Toast.makeText(
+                        context,
+                        "No se puede reproducir canal",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
                 }
             })
         }
     }
+
+    LaunchedEffect(channel) {
+        Toast.makeText(
+            context,
+            channel.name,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
 
 
     val streamUrl = channel.url
