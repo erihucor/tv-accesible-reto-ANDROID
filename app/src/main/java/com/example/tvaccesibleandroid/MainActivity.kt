@@ -24,6 +24,13 @@ import androidx.compose.runtime.remember
 import androidx.media3.common.Player
 import androidx.media3.common.PlaybackException
 
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+
+
 private const val CHANNEL_ON_STREAM = "ecuavisa"
 
 class MainActivity : ComponentActivity() {
@@ -38,9 +45,18 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         //Set el canal a usar
-        val channel = ChannelsProvider.getById(CHANNEL_ON_STREAM) ?: return
+        val initialChannel = ChannelsProvider.getById(CHANNEL_ON_STREAM) ?: return
 
         setContent {
+            val channels = remember {
+                ChannelsProvider.channels
+            }
+
+            var currentIndex by remember {
+                mutableStateOf(0)
+            }
+            val currentChannel = channels[currentIndex]
+
             // Oculta status bar y navegación en Compose
             SideEffect {
                 val controller = WindowInsetsControllerCompat(window, window.decorView)
@@ -49,14 +65,21 @@ class MainActivity : ComponentActivity() {
                     WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }
 
-            VideoPlayer(channel)
+            VideoPlayer(
+                channel = currentChannel,
+                onNextChannel = {
+                    currentIndex = (currentIndex + 1) % channels.size
+                }
+            )
         }
     }
 }
 
 @Composable
-fun VideoPlayer(channel: Channel) {
-
+fun VideoPlayer(
+    channel: Channel,
+    onNextChannel: () -> Unit
+){
     val context = androidx.compose.ui.platform.LocalContext.current
 
     val player = remember {
@@ -83,12 +106,25 @@ fun VideoPlayer(channel: Channel) {
         onDispose { player.release() }
     }
 
-    AndroidView(
-        modifier = androidx.compose.ui.Modifier.fillMaxSize(),
-        factory = {
-            androidx.media3.ui.PlayerView(it).apply {
-                this.player = player
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = {
+                androidx.media3.ui.PlayerView(it).apply {
+                    this.player = player
+                    useController = false
+                }
             }
+        )
+
+        Button(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(24.dp),
+            onClick = onNextChannel
+        ) {
+            Text("Cambiar canal")
         }
-    )
+    }
 }
