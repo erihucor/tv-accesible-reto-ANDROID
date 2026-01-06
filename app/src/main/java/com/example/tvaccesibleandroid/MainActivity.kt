@@ -70,6 +70,9 @@ class MainActivity : ComponentActivity() {
                 channel = currentChannel,
                 onNextChannel = {
                     currentIndex = (currentIndex + 1) % channels.size
+                },
+                onPreviousChannel = {
+                    currentIndex = (currentIndex - 1) % channels.size
                 }
             )
         }
@@ -79,7 +82,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun VideoPlayer(
     channel: Channel,
-    onNextChannel: () -> Unit
+    onNextChannel: () -> Unit,
+    onPreviousChannel: () -> Unit
 ){
     val context = androidx.compose.ui.platform.LocalContext.current
 
@@ -141,7 +145,16 @@ fun VideoPlayer(
                 .padding(24.dp),
             onClick = onNextChannel
         ) {
-            Text("Cambiar canal")
+            Text("Siguiente canal")
+        }
+
+        Button(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(24.dp),
+            onClick = onPreviousChannel
+        ) {
+            Text("Anterior canal")
         }
     }
 }
