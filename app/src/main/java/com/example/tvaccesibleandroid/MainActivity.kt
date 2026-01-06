@@ -31,6 +31,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.text.font.FontWeight
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Row
+
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.Arrangement
+
+import androidx.compose.foundation.shape.CircleShape
+
 
 private const val CHANNEL_ON_STREAM = "ecuavisa"
 
@@ -72,7 +90,7 @@ class MainActivity : ComponentActivity() {
                     currentIndex = (currentIndex + 1) % channels.size
                 },
                 onPreviousChannel = {
-                    currentIndex = (currentIndex - 1) % channels.size
+                    currentIndex = (currentIndex - 1 + channels.size) % channels.size
                 }
             )
         }
@@ -104,7 +122,7 @@ fun VideoPlayer(
             })
         }
     }
-
+/*
     LaunchedEffect(channel) {
         Toast.makeText(
             context,
@@ -112,7 +130,7 @@ fun VideoPlayer(
             Toast.LENGTH_SHORT
         ).show()
     }
-
+*/
 
 
     val streamUrl = channel.url
@@ -139,22 +157,97 @@ fun VideoPlayer(
             }
         )
 
-        Button(
+        Row(
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(24.dp),
-            onClick = onNextChannel
+                .fillMaxSize()
+                .padding(horizontal = 24.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Siguiente canal")
+
+            // Indicador izquierdo
+            Box(
+                modifier = Modifier
+                    .size(80.dp)
+                    .background(
+                        color = Color.Black.copy(alpha = 0.25f),
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ChevronLeft,
+                    contentDescription = "Canal anterior",
+                    tint = Color.White.copy(alpha = 0.85f),
+                    modifier = Modifier.size(48.dp)
+                )
+            }
+
+            // Indicador derecho
+            Box(
+                modifier = Modifier
+                    .size(80.dp)
+                    .background(
+                        color = Color.Black.copy(alpha = 0.25f),
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = "Siguiente canal",
+                    tint = Color.White.copy(alpha = 0.85f),
+                    modifier = Modifier.size(48.dp)
+                )
+            }
         }
 
-        Button(
+        Box(
             modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(24.dp),
-            onClick = onPreviousChannel
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+                .background(
+                    color = Color.Black.copy(alpha = 0.6f),
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .padding(horizontal = 12.dp, vertical = 8.dp)
         ) {
-            Text("Anterior canal")
+            Text(
+                text = channel.name,
+                color = Color.White,
+                fontSize = 30.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1
+            )
         }
+
+        Row(modifier = Modifier.fillMaxSize()) {
+            // Zona izquierda – canal anterior
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+                        onPreviousChannel()
+                    }
+            )
+
+            // Zona derecha – siguiente canal
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+                        onNextChannel()
+                    }
+            )
+        }
+
     }
 }
