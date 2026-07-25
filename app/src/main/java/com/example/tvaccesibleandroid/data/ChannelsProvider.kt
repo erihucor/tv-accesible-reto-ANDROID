@@ -38,6 +38,16 @@ object ChannelsProvider {
             url = "http://45.171.108.253:8888/TC/index.m3u8"
         ),
         Channel(
+            id = "07",
+            name = "El Chavo del 8",
+            url = "https://live20.bozztv.com/giatvplayout7/giatv-211465/playlist.m3u8"
+        ),
+        Channel(
+            id = "08",
+            name = "Corazon TV",
+            url = "https://sistemastr.tropicalmoonmedia.com/live/7FFCFEC3978B68D1A2ED0A38DE96AF76/12.m3u8"
+        ),
+        Channel(
             id = "test",
             name = "Video de Prueba",
             url = "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
