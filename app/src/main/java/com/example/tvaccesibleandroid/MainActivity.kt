@@ -147,6 +147,7 @@ fun VideoPlayer(
                 androidx.media3.ui.PlayerView(it).apply {
                     this.player = player
                     useController = false
+                    setBackgroundColor(android.graphics.Color.BLACK)
                 }
             }
         )
