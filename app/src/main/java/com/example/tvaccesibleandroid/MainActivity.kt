@@ -49,9 +49,6 @@ import androidx.compose.foundation.layout.Arrangement
 
 import androidx.compose.foundation.shape.CircleShape
 
-
-private const val CHANNEL_ON_STREAM = "ecuavisa"
-
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,9 +59,6 @@ class MainActivity : ComponentActivity() {
 
         // Solo setea decorfits antes de Compose
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        //Set el canal a usar
-        val initialChannel = ChannelsProvider.getById(CHANNEL_ON_STREAM) ?: return
 
         setContent {
             val channels = remember {
