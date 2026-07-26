@@ -32,7 +32,6 @@ import androidx.media3.common.PlaybackException
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -53,6 +52,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.foundation.layout.Arrangement
 
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.style.TextOverflow
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 
 class MainActivity : ComponentActivity() {
@@ -254,20 +255,52 @@ fun VideoPlayer(
 
         Box(
             modifier = Modifier
-                .align(Alignment.TopEnd)
+                .align(Alignment.TopStart)
                 .padding(16.dp)
                 .background(
-                    color = Color.Black.copy(alpha = 0.6f),
-                    shape = RoundedCornerShape(8.dp)
+                    Color.Black,
+                    RoundedCornerShape(2.dp)
                 )
                 .padding(horizontal = 12.dp, vertical = 8.dp)
         ) {
             Text(
                 text = channel.name,
                 color = Color.White,
-                fontSize = 30.sp,
+                fontSize = 22.sp,
                 fontWeight = FontWeight.SemiBold,
-                maxLines = 1
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+
+        val (backgroundColor, displayText) = when (channel.type) {
+            ChannelType.YOUTUBE -> Pair(
+                Color(0xFFE53935), // rojo suave
+                "YouTube"
+            )
+            ChannelType.STREAM -> Pair(
+                Color(0xFF43A047), // verde suave
+                "TV"
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+                .background(
+                    backgroundColor,
+                    RoundedCornerShape(2.dp)
+                )
+                .padding(horizontal = 12.dp, vertical = 8.dp)
+        ) {
+            Text(
+                text = displayText,
+                color = Color.White,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
 
