@@ -1,9 +1,22 @@
 package com.example.tvaccesibleandroid.data
 import com.example.tvaccesibleandroid.model.Channel
+import com.example.tvaccesibleandroid.model.ChannelType
 
 object ChannelsProvider {
 
     val channels = listOf(
+        Channel(
+            id = "yt-demo",
+            name = "YouTube Demo",
+            url = "https://www.youtube.com/watch?v=V_g_Ut0jO-0",
+            type = ChannelType.YOUTUBE
+        ),
+        Channel(
+            id = "yt-live-demo",
+            name = "YouTube Live Demo",
+            url = "https://www.youtube.com/@NASA/live",
+            type = ChannelType.YOUTUBE
+        ),
         Channel(
             id = "01",
             name = "Ecuavisa QUITO",
