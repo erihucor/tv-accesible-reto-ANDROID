@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveable
 
 import androidx.compose.foundation.layout.fillMaxSize
 import android.content.pm.ActivityInfo
@@ -18,6 +19,10 @@ import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.tvaccesibleandroid.data.ChannelsProvider
 import com.example.tvaccesibleandroid.model.Channel
+import com.example.tvaccesibleandroid.model.ChannelType
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 import android.util.Log
 import android.widget.Toast
@@ -48,6 +53,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.foundation.layout.Arrangement
 
 import androidx.compose.foundation.shape.CircleShape
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 
 class MainActivity : ComponentActivity() {
 
@@ -65,10 +71,8 @@ class MainActivity : ComponentActivity() {
                 ChannelsProvider.channels
             }
 
-            var currentIndex by remember {
-                mutableStateOf(0)
-            }
-            val currentChannel = channels[currentIndex]
+            var currentIndex by rememberSaveable { mutableIntStateOf(0) }
+            val currentChannel = channels.getOrNull(currentIndex) ?: channels.firstOrNull() ?: return@setContent
 
             // Oculta status bar y navegación en Compose
             SideEffect {
@@ -78,17 +82,42 @@ class MainActivity : ComponentActivity() {
                     WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }
 
+            val goToNextChannel = {
+                if (channels.isNotEmpty()) {
+                    currentIndex = cycleChannelIndex(currentIndex, 1, channels.size)
+                }
+            }
+            val goToPreviousChannel = {
+                if (channels.isNotEmpty()) {
+                    currentIndex = cycleChannelIndex(currentIndex, -1, channels.size)
+                }
+            }
+
             VideoPlayer(
                 channel = currentChannel,
-                onNextChannel = {
-                    currentIndex = (currentIndex + 1) % channels.size
-                },
-                onPreviousChannel = {
-                    currentIndex = (currentIndex - 1 + channels.size) % channels.size
-                }
+                onNextChannel = goToNextChannel,
+                onPreviousChannel = goToPreviousChannel
             )
         }
     }
+}
+
+internal fun buildYouTubeVideoId(url: String): String? {
+    val normalizedUrl = url.trim()
+    val youtubeRegex = Regex("""(?:youtube\.com/(?:watch\?v=|embed/|shorts/)|youtu\.be/)([A-Za-z0-9_-]{11})""")
+    val match = youtubeRegex.find(normalizedUrl)
+
+    if (match != null) {
+        return match.groupValues[1]
+    }
+
+    val watchMatch = Regex("""[?&]v=([A-Za-z0-9_-]{11})""").find(normalizedUrl)
+    return watchMatch?.groupValues?.get(1)
+}
+
+internal fun cycleChannelIndex(currentIndex: Int, direction: Int, size: Int): Int {
+    if (size <= 1) return 0
+    return ((currentIndex + direction) % size + size) % size
 }
 
 @Composable
@@ -98,59 +127,85 @@ fun VideoPlayer(
     onPreviousChannel: () -> Unit
 ){
     val context = androidx.compose.ui.platform.LocalContext.current
-
-    val player = remember {
-        ExoPlayer.Builder(context).build().apply {
-
-            addListener(object : Player.Listener {
-                override fun onPlayerError(error: PlaybackException) {
-                    Log.e("PLAYER", "Error reproduciendo stream", error)
-
-                    Toast.makeText(
-                        context,
-                        "No se puede reproducir canal",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                }
-            })
-        }
-    }
-/*
-    LaunchedEffect(channel) {
-        Toast.makeText(
-            context,
-            channel.name,
-            Toast.LENGTH_SHORT
-        ).show()
-    }
-*/
-
-
+    val lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
     val streamUrl = channel.url
 
-    LaunchedEffect(streamUrl) {
-        player.setMediaItem(MediaItem.fromUri(streamUrl))
-        player.prepare()
-        player.play()
-    }
-
-    DisposableEffect(Unit) {
-        onDispose { player.release() }
-    }
-
     Box(modifier = Modifier.fillMaxSize()) {
+        //Logica para identicar fuente YOUTUBE/STREAM
+        if (channel.type == ChannelType.YOUTUBE) {
+            key(channel.id) {
+                AndroidView(
+                    //modifier = Modifier.fillMaxSize(),
+                    factory = { ctx ->
+                        YouTubePlayerView(ctx).apply {
+                            lifecycleOwner.lifecycle.addObserver(this)
+                            addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+                                override fun onReady(youTubePlayer: YouTubePlayer) {
+                                    val videoId = buildYouTubeVideoId(streamUrl)
+                                    if (!videoId.isNullOrBlank()) {
+                                        youTubePlayer.loadVideo(videoId, 0f)
+                                    } else {
+                                        Toast.makeText(
+                                            ctx,
+                                            "No se pudo identificar el video de YouTube",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
 
-        AndroidView(
-            modifier = Modifier.fillMaxSize(),
-            factory = {
-                androidx.media3.ui.PlayerView(it).apply {
-                    this.player = player
-                    useController = false
-                    setBackgroundColor(android.graphics.Color.BLACK)
+                                override fun onError(
+                                    youTubePlayer: YouTubePlayer,
+                                    error: PlayerConstants.PlayerError
+                                ) {
+                                    Toast.makeText(
+                                        ctx,
+                                        "Video no disponible en este reproductor. Abre en YouTube.",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            })
+                        }
+                    }
+                )
+            }
+        } else {
+            val player = remember {
+                ExoPlayer.Builder(context).build().apply {
+                    addListener(object : Player.Listener {
+                        override fun onPlayerError(error: PlaybackException) {
+                            Log.e("PLAYER", "Error reproduciendo stream", error)
+
+                            Toast.makeText(
+                                context,
+                                "No se puede reproducir canal",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    })
                 }
             }
-        )
+
+            LaunchedEffect(streamUrl) {
+                player.setMediaItem(MediaItem.fromUri(streamUrl))
+                player.prepare()
+                player.play()
+            }
+
+            DisposableEffect(player) {
+                onDispose { player.release() }
+            }
+
+            AndroidView(
+                modifier = Modifier.fillMaxSize(),
+                factory = {
+                    androidx.media3.ui.PlayerView(it).apply {
+                        this.player = player
+                        useController = false
+                        setBackgroundColor(android.graphics.Color.BLACK)
+                    }
+                }
+            )
+        }
 
         Row(
             modifier = Modifier
