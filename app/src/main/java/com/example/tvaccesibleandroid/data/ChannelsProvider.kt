@@ -6,15 +6,15 @@ object ChannelsProvider {
 
     val channels = listOf(
         Channel(
-            id = "yt-live-demo",
-            name = "YouTube Live Demo",
-            url = "https://www.youtube.com/watch?v=IskkmNPJdUk",
+            id = "yt-demo",
+            name = "YouTube Demo",
+            url = "https://www.youtube.com/watch?v=V_g_Ut0jO-0",
             type = ChannelType.YOUTUBE
         ),
         Channel(
-            id = "yt-demo",
-            name = "YouTube Demo",
-            url = "https://www.youtube.com/watch?v=8dA2yVsUO0c",
+            id = "yt-live-demo",
+            name = "YouTube Live Demo",
+            url = "https://www.youtube.com/@NASA/live",
             type = ChannelType.YOUTUBE
         ),
         Channel(
