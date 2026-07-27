@@ -284,24 +284,52 @@ fun VideoPlayer(
                 }
             }
 
-            Box(
+            Row(
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(16.dp)
-                    .background(
-                        Color.Black,
-                        RoundedCornerShape(2.dp)
-                    )
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(
-                    text = channel.name,
-                    color = Color.White,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+
+                Box(
+                    modifier = Modifier
+                        .background(
+                            Color.Black,
+                            RoundedCornerShape(2.dp)
+                        )
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                ) {
+                    Text(
+                        text = channel.name,
+                        color = Color.White,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+                val info = if (channel.sources.isEmpty()) {
+                    "0/0"
+                } else {
+                    "${currentSourceIndex + 1}/${channel.sources.size}"
+                }
+
+                Box(
+                    modifier = Modifier
+                        .background(
+                            Color.Blue,
+                            RoundedCornerShape(2.dp)
+                        )
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                ) {
+                    Text(
+                        text = info,
+                        color = Color.White,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
 
             val (backgroundColor, displayText) = when (sourceType) {
