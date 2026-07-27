@@ -129,14 +129,24 @@ fun VideoPlayer(
 ){
     val context = androidx.compose.ui.platform.LocalContext.current
     val lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
-    val streamUrl = channel.url
+    var currentSourceIndex by remember(channel.id) { mutableIntStateOf(0) }
+    val source = channel.sources.getOrNull(currentSourceIndex)
+    val streamUrl = source?.url.orEmpty()
+    val sourceType = source?.type ?: ChannelType.STREAM
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        //Logica para identicar fuente YOUTUBE/STREAM
-        if (channel.type == ChannelType.YOUTUBE) {
-            key(channel.id) {
+    fun tryNextSource(): Boolean {
+        return if (currentSourceIndex < channel.sources.lastIndex) {
+            currentSourceIndex += 1
+            true
+        } else {
+            false
+        }
+    }
+
+    key(channel.id, currentSourceIndex) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (sourceType == ChannelType.YOUTUBE) {
                 AndroidView(
-                    //modifier = Modifier.fillMaxSize(),
                     factory = { ctx ->
                         YouTubePlayerView(ctx).apply {
                             lifecycleOwner.lifecycle.addObserver(this)
@@ -145,6 +155,12 @@ fun VideoPlayer(
                                     val videoId = buildYouTubeVideoId(streamUrl)
                                     if (!videoId.isNullOrBlank()) {
                                         youTubePlayer.loadVideo(videoId, 0f)
+                                    } else if (tryNextSource()) {
+                                        Toast.makeText(
+                                            ctx,
+                                            "Fuente de YouTube inválida, probando siguiente fuente...",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     } else {
                                         Toast.makeText(
                                             ctx,
@@ -158,179 +174,194 @@ fun VideoPlayer(
                                     youTubePlayer: YouTubePlayer,
                                     error: PlayerConstants.PlayerError
                                 ) {
-                                    Toast.makeText(
-                                        ctx,
-                                        "Video no disponible en este reproductor. Abre en YouTube.",
-                                        Toast.LENGTH_LONG
-                                    ).show()
+                                    if (tryNextSource()) {
+                                        Toast.makeText(
+                                            ctx,
+                                            "Fuente de YouTube falló, probando siguiente fuente...",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        Toast.makeText(
+                                            ctx,
+                                            "Video no disponible en este reproductor. Abre en YouTube.",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
                                 }
                             })
                         }
                     }
                 )
-            }
-        } else {
-            val player = remember {
-                ExoPlayer.Builder(context).build().apply {
-                    addListener(object : Player.Listener {
-                        override fun onPlayerError(error: PlaybackException) {
-                            Log.e("PLAYER", "Error reproduciendo stream", error)
+            } else {
+                val player = remember(streamUrl) {
+                    ExoPlayer.Builder(context).build().apply {
+                        addListener(object : Player.Listener {
+                            override fun onPlayerError(error: PlaybackException) {
+                                Log.e("PLAYER", "Error reproduciendo stream", error)
 
-                            Toast.makeText(
-                                context,
-                                "No se puede reproducir canal",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    })
-                }
-            }
-
-            LaunchedEffect(streamUrl) {
-                player.setMediaItem(MediaItem.fromUri(streamUrl))
-                player.prepare()
-                player.play()
-            }
-
-            DisposableEffect(player) {
-                onDispose { player.release() }
-            }
-
-            AndroidView(
-                modifier = Modifier.fillMaxSize(),
-                factory = {
-                    androidx.media3.ui.PlayerView(it).apply {
-                        this.player = player
-                        useController = false
-                        setBackgroundColor(android.graphics.Color.BLACK)
+                                if (tryNextSource()) {
+                                    Toast.makeText(
+                                        context,
+                                        "Fuente falló, probando siguiente fuente...",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "No se puede reproducir canal",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        })
                     }
                 }
-            )
-        }
 
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+                LaunchedEffect(streamUrl) {
+                    player.setMediaItem(MediaItem.fromUri(streamUrl))
+                    player.prepare()
+                    player.play()
+                }
+
+                DisposableEffect(player) {
+                    onDispose { player.release() }
+                }
+
+                AndroidView(
+                    modifier = Modifier.fillMaxSize(),
+                    factory = {
+                        androidx.media3.ui.PlayerView(it).apply {
+                            this.player = player
+                            useController = false
+                            setBackgroundColor(android.graphics.Color.BLACK)
+                        }
+                    }
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
             // Indicador izquierdo
-            Box(
-                modifier = Modifier
-                    .size(80.dp)
-                    .background(
-                        color = Color.Black.copy(alpha = 0.25f),
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ChevronLeft,
-                    contentDescription = "Canal anterior",
-                    tint = Color.White.copy(alpha = 0.85f),
-                    modifier = Modifier.size(48.dp)
-                )
-            }
+                Box(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .background(
+                            color = Color.Black.copy(alpha = 0.25f),
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ChevronLeft,
+                        contentDescription = "Canal anterior",
+                        tint = Color.White.copy(alpha = 0.85f),
+                        modifier = Modifier.size(48.dp)
+                    )
+                }
 
             // Indicador derecho
+                Box(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .background(
+                            color = Color.Black.copy(alpha = 0.25f),
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ChevronRight,
+                        contentDescription = "Siguiente canal",
+                        tint = Color.White.copy(alpha = 0.85f),
+                        modifier = Modifier.size(48.dp)
+                    )
+                }
+            }
+
             Box(
                 modifier = Modifier
-                    .size(80.dp)
+                    .align(Alignment.TopStart)
+                    .padding(16.dp)
                     .background(
-                        color = Color.Black.copy(alpha = 0.25f),
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
+                        Color.Black,
+                        RoundedCornerShape(2.dp)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.ChevronRight,
-                    contentDescription = "Siguiente canal",
-                    tint = Color.White.copy(alpha = 0.85f),
-                    modifier = Modifier.size(48.dp)
+                Text(
+                    text = channel.name,
+                    color = Color.White,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            val (backgroundColor, displayText) = when (sourceType) {
+                ChannelType.YOUTUBE -> Pair(
+                Color(0xFFE53935), // rojo suave
+                    "YouTube"
+                )
+                ChannelType.STREAM -> Pair(
+                Color(0xFF43A047), // verde suave
+                    "TV"
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+                    .background(
+                        backgroundColor,
+                        RoundedCornerShape(2.dp)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
+            ) {
+                Text(
+                    text = displayText,
+                    color = Color.White,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            Row(modifier = Modifier.fillMaxSize()) {
+            // Zona izquierda – canal anterior
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {
+                            onPreviousChannel()
+                        }
+                )
+
+            // Zona derecha – siguiente canal
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {
+                            onNextChannel()
+                        }
                 )
             }
         }
-
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(16.dp)
-                .background(
-                    Color.Black,
-                    RoundedCornerShape(2.dp)
-                )
-                .padding(horizontal = 12.dp, vertical = 8.dp)
-        ) {
-            Text(
-                text = channel.name,
-                color = Color.White,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-
-        val (backgroundColor, displayText) = when (channel.type) {
-            ChannelType.YOUTUBE -> Pair(
-                Color(0xFFE53935), // rojo suave
-                "YouTube"
-            )
-            ChannelType.STREAM -> Pair(
-                Color(0xFF43A047), // verde suave
-                "TV"
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)
-                .background(
-                    backgroundColor,
-                    RoundedCornerShape(2.dp)
-                )
-                .padding(horizontal = 12.dp, vertical = 8.dp)
-        ) {
-            Text(
-                text = displayText,
-                color = Color.White,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-
-        Row(modifier = Modifier.fillMaxSize()) {
-            // Zona izquierda – canal anterior
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) {
-                        onPreviousChannel()
-                    }
-            )
-
-            // Zona derecha – siguiente canal
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) {
-                        onNextChannel()
-                    }
-            )
-        }
-
     }
 }
