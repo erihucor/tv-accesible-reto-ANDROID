@@ -1,6 +1,9 @@
 package com.example.tvaccesibleandroid
 
+import android.content.Context
 import android.os.Bundle
+import android.os.PowerManager
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
@@ -44,6 +47,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 class MainActivity : ComponentActivity() {
 
+    private var wakeLock: PowerManager.WakeLock? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
 
@@ -54,6 +59,16 @@ class MainActivity : ComponentActivity() {
 
         // Solo setea decorfits antes de Compose
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        // Evita que la TV entre en modo espera o pantalla de ahorro
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        wakeLock = powerManager.newWakeLock(
+            PowerManager.FULL_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
+            "tvAccesible:keepScreenOn"
+        )
+        wakeLock?.acquire(10 * 60 * 1000L)
 
         setContent {
             val channels = remember {
@@ -83,6 +98,13 @@ class MainActivity : ComponentActivity() {
                 }
             )
         }
+    }
+
+    override fun onDestroy() {
+        wakeLock?.let {
+            if (it.isHeld) it.release()
+        }
+        super.onDestroy()
     }
 }
 
