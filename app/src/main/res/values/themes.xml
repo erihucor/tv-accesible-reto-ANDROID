@@ -2,4 +2,20 @@
 <resources>
 
     <style name="Theme.TVAccesibleAndroid" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- Tema del Splash -->
+    <style
+        name="Theme.TVAccesibleAndroid.Splash"
+        parent="Theme.SplashScreen">
+
+        <!-- Color de fondo -->
+        <item name="windowSplashScreenBackground">@android:color/holo_red_light</item>
+
+        <!-- Logo que aparecerá en el centro -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_splash</item>
+
+        <!-- Tema que usará la app al terminar el splash -->
+        <item name="postSplashScreenTheme">@style/Theme.TVAccesibleAndroid</item>
+
+    </style>
 </resources>
