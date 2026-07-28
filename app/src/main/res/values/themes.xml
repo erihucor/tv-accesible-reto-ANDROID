@@ -9,7 +9,7 @@
         parent="Theme.SplashScreen">
 
         <!-- Color de fondo -->
-        <item name="windowSplashScreenBackground">@android:color/holo_red_light</item>
+        <item name="windowSplashScreenBackground">@android:color/holo_red_dark</item>
 
         <!-- Logo que aparecerá en el centro -->
         <item name="windowSplashScreenAnimatedIcon">@drawable/logo_splash</item>
