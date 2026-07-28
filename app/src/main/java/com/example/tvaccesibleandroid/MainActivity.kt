@@ -152,47 +152,31 @@ fun VideoPlayer(
             }
         )
 
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(24.dp),
+            contentAlignment = Alignment.BottomEnd
         ) {
-
-            // Indicador izquierdo
             Box(
                 modifier = Modifier
-                    .size(80.dp)
                     .background(
-                        color = Color.Black.copy(alpha = 0.25f),
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
+                        color = Color(0xFF7C3AED),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+                        onNextChannel()
+                    }
+                    .padding(horizontal = 24.dp, vertical = 14.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.ChevronLeft,
-                    contentDescription = "Canal anterior",
-                    tint = Color.White.copy(alpha = 0.85f),
-                    modifier = Modifier.size(48.dp)
-                )
-            }
-
-            // Indicador derecho
-            Box(
-                modifier = Modifier
-                    .size(80.dp)
-                    .background(
-                        color = Color.Black.copy(alpha = 0.25f),
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ChevronRight,
-                    contentDescription = "Siguiente canal",
-                    tint = Color.White.copy(alpha = 0.85f),
-                    modifier = Modifier.size(48.dp)
+                Text(
+                    text = "CAMBIAR DE CANAL",
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
@@ -213,34 +197,6 @@ fun VideoPlayer(
                 fontSize = 30.sp,
                 fontWeight = FontWeight.SemiBold,
                 maxLines = 1
-            )
-        }
-
-        Row(modifier = Modifier.fillMaxSize()) {
-            // Zona izquierda – canal anterior
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) {
-                        onPreviousChannel()
-                    }
-            )
-
-            // Zona derecha – siguiente canal
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) {
-                        onNextChannel()
-                    }
             )
         }
 
