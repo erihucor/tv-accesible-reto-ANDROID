@@ -5,22 +5,22 @@ object ChannelsProvider {
 
     val channels = listOf(
         Channel(
-            id = "03",
+            id = "01",
             name = "Oromar",
             url = "https://stream.oromar.tv/hls/oromartv_hi/index.m3u8"
         ),
         Channel(
-            id = "06",
+            id = "02",
             name = "TC",
             url = "http://45.171.108.253:8888/TC/index.m3u8"
         ),
         Channel(
-            id = "04",
+            id = "03",
             name = "RTS",
             url = "http://157.100.248.242:8080/RTSHD/index.m3u8"
         ),
         Channel(
-            id = "02",
+            id = "04",
             name = "Ecuavisa GUAYAQUIL",
             url = "https://dai.google.com/linear/hls/event/GyPkTVDZSXGhpOvxPK7m2g/master.m3u8"
         ),
@@ -30,17 +30,17 @@ object ChannelsProvider {
             url = "http://157.100.248.242:8080/TeleamazonasHD/index.m3u8"
         ),
         Channel(
-            id = "07",
+            id = "06",
             name = "El Chavo del 8",
             url = "https://live20.bozztv.com/giatvplayout7/giatv-211465/playlist.m3u8"
         ),
         Channel(
-            id = "08",
+            id = "07",
             name = "Corazon TV",
             url = "https://sistemastr.tropicalmoonmedia.com/live/7FFCFEC3978B68D1A2ED0A38DE96AF76/12.m3u8"
         ),
         Channel(
-            id = "01",
+            id = "08",
             name = "Ecuavisa QUITO",
             url = "http://45.171.108.253:8888/ECUAVISA/index.m3u8"
         )
