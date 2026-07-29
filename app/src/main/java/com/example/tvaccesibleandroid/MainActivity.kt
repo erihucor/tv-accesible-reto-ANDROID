@@ -125,7 +125,7 @@ fun VideoPlayer(
 
                     Toast.makeText(
                         context,
-                        "No se puede reproducir canal",
+                        "El canal no esta disponible, cambie a otro",
                         Toast.LENGTH_SHORT
                     ).show()
 
