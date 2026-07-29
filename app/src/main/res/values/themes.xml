@@ -9,10 +9,10 @@
         parent="Theme.SplashScreen">
 
         <!-- Color de fondo -->
-        <item name="windowSplashScreenBackground">@android:color/holo_red_dark</item>
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
 
         <!-- Logo que aparecerá en el centro -->
-        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_splash</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/tv_icono_2</item>
 
         <!-- Tema que usará la app al terminar el splash -->
         <item name="postSplashScreenTheme">@style/Theme.TVAccesibleAndroid</item>
