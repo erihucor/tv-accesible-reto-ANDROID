@@ -109,21 +109,15 @@ class MainActivity : ComponentActivity() {
     //Handle control remote buttons
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
 
-        Toast.makeText(
-            this,
-            "${KeyEvent.keyCodeToString(keyCode)} ($keyCode)",
-            Toast.LENGTH_SHORT
-        ).show()
-
         when (keyCode) {
 
             KeyEvent.KEYCODE_DPAD_UP -> {
-                currentIndex = (currentIndex - 1 + channels.size) % channels.size
+                currentIndex = (currentIndex + 1) % channels.size
                 return true
             }
 
             KeyEvent.KEYCODE_DPAD_DOWN -> {
-                currentIndex = (currentIndex + 1) % channels.size
+                currentIndex = (currentIndex - 1 + channels.size) % channels.size
                 return true
             }
         }
@@ -193,34 +187,6 @@ fun VideoPlayer(
             }
         )
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            Box(
-                modifier = Modifier
-                    .background(
-                        color = Color(0xFF7C3AED),
-                        shape = RoundedCornerShape(16.dp)
-                    )
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) {
-                        onNextChannel()
-                    }
-                    .padding(horizontal = 24.dp, vertical = 14.dp)
-            ) {
-                Text(
-                    text = "CAMBIAR DE CANAL",
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
 
         Row(
             modifier = Modifier
