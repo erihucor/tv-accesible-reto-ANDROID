@@ -206,7 +206,7 @@ fun VideoPlayer(
                 Text(
                     text = channel.id,
                     color = Color.White,
-                    fontSize = 30.sp,
+                    fontSize = 35.sp,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1
                 )
@@ -223,7 +223,7 @@ fun VideoPlayer(
                 Text(
                     text = channel.name,
                     color = Color.White,
-                    fontSize = 30.sp,
+                    fontSize = 35.sp,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1
                 )
