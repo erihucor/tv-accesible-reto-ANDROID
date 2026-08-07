@@ -12,7 +12,7 @@ object ChannelsProvider {
         Channel(
             id = "02",
             name = "TC",
-            url = "http://45.171.108.253:8888/TC/index.m3u8"
+            url = "http://45.224.97.181:9999/TC/index.m3u8"
         ),
         Channel(
             id = "03",
@@ -26,23 +26,23 @@ object ChannelsProvider {
         ),
         Channel(
             id = "05",
+            name = "Ecuavisa QUITO",
+            url = "http://45.171.108.253:8888/ECUAVISA/index.m3u8"
+        ),
+        Channel(
+            id = "06",
             name = "Teleamazonas QUITO",
             url = "http://157.100.248.242:8080/TeleamazonasHD/index.m3u8"
         ),
         Channel(
-            id = "06",
+            id = "07",
             name = "El Chavo del 8",
             url = "https://live20.bozztv.com/giatvplayout7/giatv-211465/playlist.m3u8"
         ),
         Channel(
-            id = "07",
+            id = "08",
             name = "Corazon TV",
             url = "https://sistemastr.tropicalmoonmedia.com/live/7FFCFEC3978B68D1A2ED0A38DE96AF76/12.m3u8"
-        ),
-        Channel(
-            id = "08",
-            name = "Ecuavisa QUITO",
-            url = "http://45.171.108.253:8888/ECUAVISA/index.m3u8"
         )
     )
 

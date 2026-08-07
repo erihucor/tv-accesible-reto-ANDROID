@@ -44,10 +44,15 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.ui.Alignment
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import android.view.KeyEvent
 
 class MainActivity : ComponentActivity() {
 
     private var wakeLock: PowerManager.WakeLock? = null
+
+    val channels =  ChannelsProvider.channels
+
+    var currentIndex by mutableStateOf(0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -71,13 +76,7 @@ class MainActivity : ComponentActivity() {
         wakeLock?.acquire(10 * 60 * 1000L)
 
         setContent {
-            val channels = remember {
-                ChannelsProvider.channels
-            }
 
-            var currentIndex by remember {
-                mutableStateOf(0)
-            }
             val currentChannel = channels[currentIndex]
 
             // Oculta status bar y navegación en Compose
@@ -105,6 +104,25 @@ class MainActivity : ComponentActivity() {
             if (it.isHeld) it.release()
         }
         super.onDestroy()
+    }
+
+    //Handle control remote buttons
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+
+        when (keyCode) {
+
+            KeyEvent.KEYCODE_DPAD_UP -> {
+                currentIndex = (currentIndex + 1) % channels.size
+                return true
+            }
+
+            KeyEvent.KEYCODE_DPAD_DOWN -> {
+                currentIndex = (currentIndex - 1 + channels.size) % channels.size
+                return true
+            }
+        }
+
+        return super.onKeyDown(keyCode, event)
     }
 }
 
@@ -169,34 +187,6 @@ fun VideoPlayer(
             }
         )
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            Box(
-                modifier = Modifier
-                    .background(
-                        color = Color(0xFF7C3AED),
-                        shape = RoundedCornerShape(16.dp)
-                    )
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) {
-                        onNextChannel()
-                    }
-                    .padding(horizontal = 24.dp, vertical = 14.dp)
-            ) {
-                Text(
-                    text = "CAMBIAR DE CANAL",
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
 
         Row(
             modifier = Modifier
@@ -216,7 +206,7 @@ fun VideoPlayer(
                 Text(
                     text = channel.id,
                     color = Color.White,
-                    fontSize = 30.sp,
+                    fontSize = 35.sp,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1
                 )
@@ -233,7 +223,7 @@ fun VideoPlayer(
                 Text(
                     text = channel.name,
                     color = Color.White,
-                    fontSize = 30.sp,
+                    fontSize = 35.sp,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1
                 )
