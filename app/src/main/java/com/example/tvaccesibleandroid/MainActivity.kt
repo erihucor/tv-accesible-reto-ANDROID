@@ -58,12 +58,20 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextOverflow
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import android.view.KeyEvent
 
 class MainActivity : ComponentActivity() {
 
     private var wakeLock: PowerManager.WakeLock? = null
 
+    val channels =  ChannelsProvider.channels
+
+    var currentIndex by mutableStateOf(0)
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
+
         super.onCreate(savedInstanceState)
 
         // Forzar orientación horizontal
@@ -83,12 +91,8 @@ class MainActivity : ComponentActivity() {
         wakeLock?.acquire(10 * 60 * 1000L)
 
         setContent {
-            val channels = remember {
-                ChannelsProvider.channels
-            }
 
-            var currentIndex by rememberSaveable { mutableIntStateOf(0) }
-            val currentChannel = channels.getOrNull(currentIndex) ?: channels.firstOrNull() ?: return@setContent
+            val currentChannel = channels[currentIndex]
 
             // Oculta status bar y navegación en Compose
             SideEffect {
@@ -123,6 +127,25 @@ class MainActivity : ComponentActivity() {
         }
         super.onDestroy()
     }
+
+    //Handle control remote buttons
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+
+        when (keyCode) {
+
+            KeyEvent.KEYCODE_DPAD_UP -> {
+                currentIndex = (currentIndex + 1) % channels.size
+                return true
+            }
+
+            KeyEvent.KEYCODE_DPAD_DOWN -> {
+                currentIndex = (currentIndex - 1 + channels.size) % channels.size
+                return true
+            }
+        }
+
+        return super.onKeyDown(keyCode, event)
+    }
 }
 
 internal fun buildYouTubeVideoId(url: String): String? {
@@ -156,12 +179,30 @@ fun VideoPlayer(
     val streamUrl = source?.url.orEmpty()
     val sourceType = source?.type ?: ChannelType.STREAM
 
+    val player = remember {
+        ExoPlayer.Builder(context).build().apply {
+
+            addListener(object : Player.Listener {
+                override fun onPlayerError(error: PlaybackException) {
+                    Log.e("PLAYER", "Error reproduciendo stream", error)
+
+                    Toast.makeText(
+                        context,
+                        "El canal no esta disponible, cambie a otro",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                }
+            })
+        }
+    }
+
     fun tryNextSource(): Boolean {
-        return if (currentSourceIndex < channel.sources.lastIndex) {
-            currentSourceIndex += 1
-            true
-        } else {
-            false
+    return if (currentSourceIndex < channel.sources.lastIndex) {
+        currentSourceIndex += 1
+        true
+    } else {
+        false
         }
     }
 
