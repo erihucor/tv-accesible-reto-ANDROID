@@ -1,9 +1,23 @@
 package com.example.tvaccesibleandroid.data
+
+import android.widget.Toast
 import com.example.tvaccesibleandroid.model.Channel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
 
 object ChannelsProvider {
 
-    val channels = listOf(
+    private const val CHANNELS_URL =
+        "https://raw.githubusercontent.com/erihucor/tv-accesible-reto-ANDROID/feature/online-channel-prov/channels.json"
+
+    fun getFallbackWarningMessage(): String =
+        "No se pudieron obtener los canales en línea. Se están usando los canales de respaldo."
+
+    private val fallbackChannels = listOf(
         Channel(
             id = "01",
             name = "Oromar",
@@ -50,6 +64,49 @@ object ChannelsProvider {
             url = "https://sistemastr.tropicalmoonmedia.com/live/7FFCFEC3978B68D1A2ED0A38DE96AF76/12.m3u8"
         )
     )
+
+    var channels: List<Channel> = fallbackChannels
+        private set
+
+    suspend fun refreshChannels(): List<Channel> = withContext(Dispatchers.IO) {
+        val remoteChannels = runCatching {
+            val json = downloadChannelsJson()
+            parseChannels(json)
+        }.getOrElse {
+            fallbackChannels
+        }
+
+        channels = remoteChannels.ifEmpty { fallbackChannels }
+        channels
+    }
+
+    fun getFallbackChannels(): List<Channel> = fallbackChannels
+
+    fun parseChannels(json: String): List<Channel> {
+        val jsonArray = JSONArray(json)
+        return (0 until jsonArray.length()).map { index ->
+            val item = jsonArray.getJSONObject(index)
+            Channel(
+                id = item.getString("id"),
+                name = item.getString("name"),
+                url = item.getString("url")
+            )
+        }
+    }
+
+    private fun downloadChannelsJson(): String {
+        val connection = URL(CHANNELS_URL).openConnection() as HttpURLConnection
+        connection.connectTimeout = 15_000
+        connection.readTimeout = 15_000
+        connection.requestMethod = "GET"
+        connection.doInput = true
+
+        if (connection.responseCode != HttpURLConnection.HTTP_OK) {
+            throw IOException("No se pudo obtener el archivo de canales: ${connection.responseCode}")
+        }
+
+        return connection.inputStream.bufferedReader().use { it.readText() }
+    }
 
     fun getById(id: String): Channel? =
         channels.find { it.id == id }
