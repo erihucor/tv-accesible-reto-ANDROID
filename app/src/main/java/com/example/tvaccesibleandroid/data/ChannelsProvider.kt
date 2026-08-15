@@ -12,7 +12,7 @@ object ChannelsProvider {
         Channel(
             id = "02",
             name = "TC",
-            url = "https://live2.eu-north-1b.cf.dmcdn.net/sec2(bax9kYcu8dVwF3gnUAt9H0g8DsBXfYPaN6t0sh-3ODyqwPl1JfZcKnL9iCDD62hffqwJNR6ewQ8U_2FA105LyrFUkq-zW3gUoWGilYn-LGmfJzyK0xtN219jcmVuhpcC)/cloud/3/x7wijay/s/live-720.m3u8"
+            url = "https://live2.eu-north-1a.cf.dmcdn.net/sec2(IXMzOyIDjTp0cn0LEALPhSyzfPXypZMy_cCtsWfydbqvD6iLGk4lJKEHHv4Ym-4J8xLUZZ86j647XR9oVPa3Zng_RJJZlqUnR7QmRrfQu7UIfQLV2TQBZOBP-dMpjTAa)/cloud/3/x7wijay/s/live-720.m3u8"
         ),
         Channel(
             id = "03",
@@ -32,7 +32,7 @@ object ChannelsProvider {
         Channel(
             id = "06",
             name = "Teleamazonas QUITO",
-            url = "https://teleamazonas-live.cdn.vustreams.com/live/fd4ab346-b4e3-4628-abf0-b5a1bc192428/live.isml/fd4ab346-b4e3-4628-abf0-b5a1bc192428.m3u8"
+            url = "https://teleamazonas-live.cdn.vustreams.com/live/fd4ab346-b4e3-4628-abf0-b5a1bc192428/live.isml/playlist.m3u8"
         ),
         Channel(
             id = "07",
