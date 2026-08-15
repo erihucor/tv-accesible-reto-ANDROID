@@ -9,6 +9,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 import androidx.compose.foundation.layout.fillMaxSize
 import android.content.pm.ActivityInfo
@@ -50,7 +52,7 @@ class MainActivity : ComponentActivity() {
 
     private var wakeLock: PowerManager.WakeLock? = null
 
-    val channels =  ChannelsProvider.channels
+    private var channels by mutableStateOf(ChannelsProvider.getFallbackChannels())
 
     var currentIndex by mutableStateOf(0)
 
@@ -58,6 +60,24 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
 
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            val usedFallback = ChannelsProvider.loadChannels()
+            channels = ChannelsProvider.channels
+
+            if (usedFallback) {
+                Toast.makeText(
+                    this@MainActivity,
+                    ChannelsProvider.getFallbackWarningMessage(),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+
+            if (channels.isNotEmpty() && currentIndex >= channels.size) {
+                currentIndex = 0
+            }
+        }
 
         // Forzar orientación horizontal
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
