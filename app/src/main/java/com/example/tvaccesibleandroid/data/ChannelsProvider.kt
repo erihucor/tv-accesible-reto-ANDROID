@@ -15,7 +15,7 @@ object ChannelsProvider {
         "https://raw.githubusercontent.com/erihucor/tv-accesible-reto-ANDROID/feature/online-channel-prov/channels.json"
 
     fun getFallbackWarningMessage(): String =
-        "No se pudieron obtener los canales en línea. Se están usando los canales de respaldo."
+        "No se obtuvieron canales ONLINE,se cargan los canales LOCALES."
 
     private val fallbackChannels = listOf(
         Channel(
@@ -68,16 +68,21 @@ object ChannelsProvider {
     var channels: List<Channel> = fallbackChannels
         private set
 
-    suspend fun refreshChannels(): List<Channel> = withContext(Dispatchers.IO) {
+    suspend fun loadChannels(): Boolean = withContext(Dispatchers.IO) {
         val remoteChannels = runCatching {
             val json = downloadChannelsJson()
             parseChannels(json)
-        }.getOrElse {
+        }.getOrNull()
+
+        val usedFallback = remoteChannels.isNullOrEmpty()
+
+        channels = if (usedFallback) {
             fallbackChannels
+        } else {
+            remoteChannels
         }
 
-        channels = remoteChannels.ifEmpty { fallbackChannels }
-        channels
+        usedFallback
     }
 
     fun getFallbackChannels(): List<Channel> = fallbackChannels

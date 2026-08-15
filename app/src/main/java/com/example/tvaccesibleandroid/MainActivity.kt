@@ -62,16 +62,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launch {
-            val refreshedChannels = ChannelsProvider.refreshChannels()
-            channels = refreshedChannels
+            val usedFallback = ChannelsProvider.loadChannels()
+            channels = ChannelsProvider.channels
 
-            if (channels == ChannelsProvider.getFallbackChannels()) {
+            if (usedFallback) {
                 Toast.makeText(
                     this@MainActivity,
                     ChannelsProvider.getFallbackWarningMessage(),
                     Toast.LENGTH_LONG
                 ).show()
             }
+
 
             if (channels.isNotEmpty() && currentIndex >= channels.size) {
                 currentIndex = 0
