@@ -2,45 +2,50 @@
   {
     "id": "01",
     "name": "Oromar",
-    "url" : "https://stream.oromar.tv/hls/camriva/index.m3u8"
+    "url" : "https://stream.oromar.tv/hls/oromartv_hi/index.m3u8"
   },
   {
     "id": "02",
+    "name": "Oromar Internacional",
+    "url" : "https://stream.oromar.tv/hls/camriva/index.m3u8"
+  },
+  {
+    "id": "03",
     "name": "Ecuador TV",
     "url": "https://video-eu1.streamerr.co/hls/s64029a8fdf/live.m3u8"
   },
   {
-    "id": "03",
+    "id": "04",
     "name": "RTS",
     "url": "https://d2w3o8zn50cs1k.cloudfront.net/ts:abr.m3u8"
   },
   {
-    "id": "04",
+    "id": "05",
     "name": "Ecuavisa GUAYAQUIL",
     "url": "https://dai.google.com/linear/hls/event/GyPkTVDZSXGhpOvxPK7m2g/master.m3u8"
   },
   {
-    "id": "05",
+    "id": "06",
     "name": "Ecuavisa QUITO",
     "url": "https://jireh-8-hls-video-us-isp.dps.live/hls-video/c54ac2799874375c81c1672abb700870537c5223/ecuavisa/ecuavisa.smil/ecuavisa/livestream0/chunks.m3u8?dpssid=b213779049306a876e85ad00b&sid=ba5t1l1xb26747018686a876e85ad009&ndvc=1"
   },
   {
-    "id": "06",
+    "id": "07",
     "name": "Teleamazonas QUITO",
     "url": "https://teleamazonas-live.cdn.vustreams.com/live/fd4ab346-b4e3-4628-abf0-b5a1bc192428/live.isml/fd4ab346-b4e3-4628-abf0-b5a1bc192428.m3u8"
   },
   {
-    "id": "07",
+    "id": "08",
     "name": "TVC",
     "url": "https://d2m7i0pvomh4vg.cloudfront.net/ts:abr.m3u8"
   },
   {
-    "id": "08",
+    "id": "09",
     "name": "El Chavo del 8",
     "url": "https://live20.bozztv.com/giatvplayout7/giatv-211465/playlist.m3u8"
   },
   {
-    "id": "09",
+    "id": "10",
     "name": "Corazon TV",
     "url": "https://sistemastr.tropicalmoonmedia.com/live/7FFCFEC3978B68D1A2ED0A38DE96AF76/12.m3u8"
   }
