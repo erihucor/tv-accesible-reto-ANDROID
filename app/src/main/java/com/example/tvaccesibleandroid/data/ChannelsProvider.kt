@@ -1,6 +1,5 @@
 package com.example.tvaccesibleandroid.data
 
-import android.widget.Toast
 import com.example.tvaccesibleandroid.model.Channel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -9,59 +8,117 @@ import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 
+import com.example.tvaccesibleandroid.model.ChannelSource
+import com.example.tvaccesibleandroid.model.ChannelType
+
 object ChannelsProvider {
 
     private const val CHANNELS_URL =
-        "https://raw.githubusercontent.com/erihucor/tv-accesible-reto-ANDROID/feature/online-channel-prov/channels.json"
+        "TESThttps://raw.githubusercontent.com/erihucor/tv-accesible-reto-ANDROID/feature/online-channel-prov/channels.json"
 
     fun getFallbackWarningMessage(): String =
-        "No se obtuvieron canales ONLINE,se cargan los canales LOCALES."
+        "No se pudieron obtener los canales en línea. Se están usando los canales de respaldo."
 
     private val fallbackChannels = listOf(
         Channel(
+            id = "00",
+            name = "BLN",
+            sources = listOf(
+                ChannelSource(
+                    url = "https://www.youtube.com/watch?v=MzJllBzHH6Q",
+                    type = ChannelType.YOUTUBE
+                )
+            )
+        ),
+        Channel(
             id = "01",
             name = "Oromar",
-            url = "https://stream.oromar.tv/hls/oromartv_hi/index.m3u8"
+            sources = listOf(
+                ChannelSource(
+                    url = "https://stream.oromar.tv/hls/oromartv_hi/index.m3u8"
+                )
+            )
         ),
         Channel(
             id = "02",
-            name = "TC",
-            url = "https://live2.eu-north-1a.cf.dmcdn.net/sec2(IXMzOyIDjTp0cn0LEALPhSyzfPXypZMy_cCtsWfydbqvD6iLGk4lJKEHHv4Ym-4J8xLUZZ86j647XR9oVPa3Zng_RJJZlqUnR7QmRrfQu7UIfQLV2TQBZOBP-dMpjTAa)/cloud/3/x7wijay/s/live-720.m3u8"
+            name = "Oromar Internacional",
+            sources = listOf(
+                ChannelSource(
+                    url = "https://stream.oromar.tv/hls/camriva/index.m3u8"
+                )
+            )
         ),
         Channel(
             id = "03",
-            name = "RTS",
-            url = "https://d2w3o8zn50cs1k.cloudfront.net/ts:abr.m3u8"
+            name = "Ecuador TV",
+            sources = listOf(
+                ChannelSource(
+                    url = "https://video-eu1.streamerr.co/hls/s64029a8fdf/live.m3u8"
+                )
+            )
         ),
         Channel(
             id = "04",
-            name = "Ecuavisa GUAYAQUIL",
-            url = "https://dai.google.com/linear/hls/event/GyPkTVDZSXGhpOvxPK7m2g/master.m3u8"
+            name = "RTS",
+            sources = listOf(
+                ChannelSource(
+                    url = "https://d2w3o8zn50cs1k.cloudfront.net/ts:abr.m3u8"
+                )
+            )
         ),
         Channel(
             id = "05",
-            name = "Ecuavisa QUITO",
-            url = "http://45.171.108.253:8888/ECUAVISA/index.m3u8"
+            name = "Ecuavisa GUAYAQUIL",
+            sources = listOf(
+                ChannelSource(
+                    url = "https://dai.google.com/linear/hls/event/GyPkTVDZSXGhpOvxPK7m2g/master.m3u8"
+                )
+            )
         ),
         Channel(
             id = "06",
-            name = "Teleamazonas QUITO",
-            url = "https://teleamazonas-live.cdn.vustreams.com/live/fd4ab346-b4e3-4628-abf0-b5a1bc192428/live.isml/playlist.m3u8"
+            name = "Ecuavisa QUITO",
+            sources = listOf(
+                ChannelSource(
+                    url = "https://jireh-8-hls-video-us-isp.dps.live/hls-video/c54ac2799874375c81c1672abb700870537c5223/ecuavisa/ecuavisa.smil/ecuavisa/livestream0/chunks.m3u8?dpssid=b213779049306a876e85ad00b&sid=ba5t1l1xb26747018686a876e85ad009&ndvc=1"
+                )
+            )
         ),
         Channel(
             id = "07",
+            name = "Teleamazonas QUITO",
+            sources = listOf(
+                ChannelSource(
+                    url = "https://teleamazonas-live.cdn.vustreams.com/live/fd4ab346-b4e3-4628-abf0-b5a1bc192428/live.isml/fd4ab346-b4e3-4628-abf0-b5a1bc192428.m3u8"
+                )
+            )
+        ),
+        Channel(
+            id = "08",
             name = "TVC",
-            url = "https://d2m7i0pvomh4vg.cloudfront.net/ts:abr.m3u8"
+            sources = listOf(
+                ChannelSource(
+                    url = "https://d2m7i0pvomh4vg.cloudfront.net/ts:abr.m3u8"
+                )
+            )
         ),
         Channel(
             id = "08",
             name = "El Chavo del 8",
-            url = "https://live20.bozztv.com/giatvplayout7/giatv-211465/playlist.m3u8"
+            sources = listOf(
+                ChannelSource(
+                    url = "https://live20.bozztv.com/giatvplayout7/giatv-211465/playlist.m3u8"
+                )
+            )
         ),
         Channel(
             id = "09",
             name = "Corazon TV",
-            url = "https://sistemastr.tropicalmoonmedia.com/live/7FFCFEC3978B68D1A2ED0A38DE96AF76/12.m3u8"
+            sources = listOf(
+                ChannelSource(
+                    url = "https://sistemastr.tropicalmoonmedia.com/live/7FFCFEC3978B68D1A2ED0A38DE96AF76/12.m3u8"
+                )
+            )
         )
     )
 
@@ -94,7 +151,12 @@ object ChannelsProvider {
             Channel(
                 id = item.getString("id"),
                 name = item.getString("name"),
-                url = item.getString("url")
+                sources = listOf(
+                    ChannelSource(
+                        url = item.getString("url"),
+                        type = ChannelType.STREAM
+                    )
+                )
             )
         }
     }

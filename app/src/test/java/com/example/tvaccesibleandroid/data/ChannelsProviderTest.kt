@@ -1,6 +1,7 @@
 package com.example.tvaccesibleandroid.data
 
 import com.example.tvaccesibleandroid.model.Channel
+import com.example.tvaccesibleandroid.model.ChannelSource
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -17,11 +18,13 @@ class ChannelsProviderTest {
 
         val result = ChannelsProvider.parseChannels(json)
 
+
         assertEquals(
             listOf(
-                Channel("01", "Oromar", "https://example.com/oromar.m3u8"),
-                Channel("02", "TC", "https://example.com/tc.m3u8")
-            ),
+                Channel("01", "Oromar",
+                    listOf(ChannelSource(url = "https://example.com/oromar.m3u8"))),
+                Channel("02", "TC",
+                    listOf(ChannelSource(url = "https://example.com/tc.m3u8")))),
             result
         )
     }
