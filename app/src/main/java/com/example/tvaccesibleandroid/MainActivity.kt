@@ -198,24 +198,6 @@ fun VideoPlayer(
     val streamUrl = source?.url.orEmpty()
     val sourceType = source?.type ?: ChannelType.STREAM
 
-    val player = remember {
-        ExoPlayer.Builder(context).build().apply {
-
-            addListener(object : Player.Listener {
-                override fun onPlayerError(error: PlaybackException) {
-                    Log.e("PLAYER", "Error reproduciendo stream", error)
-
-                    Toast.makeText(
-                        context,
-                        "El canal no esta disponible, cambie a otro",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                }
-            })
-        }
-    }
-
     fun tryNextSource(): Boolean {
     return if (currentSourceIndex < channel.sources.lastIndex) {
         currentSourceIndex += 1
@@ -229,6 +211,7 @@ fun VideoPlayer(
         Box(modifier = Modifier.fillMaxSize()) {
             if (sourceType == ChannelType.YOUTUBE) {
                 AndroidView(
+                    modifier = Modifier.fillMaxSize(),
                     factory = { ctx ->
                         YouTubePlayerView(ctx).apply {
                             lifecycleOwner.lifecycle.addObserver(this)
