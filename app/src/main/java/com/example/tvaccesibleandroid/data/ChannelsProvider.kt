@@ -14,7 +14,7 @@ import com.example.tvaccesibleandroid.model.ChannelType
 object ChannelsProvider {
 
     private const val CHANNELS_URL =
-        "TESThttps://raw.githubusercontent.com/erihucor/tv-accesible-reto-ANDROID/feature/online-channel-prov/channels.json"
+        "https://raw.githubusercontent.com/erihucor/tv-accesible-reto-ANDROID/feature/online-channel-prov/channelsV2.json"
 
     fun getFallbackWarningMessage(): String =
         "No se pudieron obtener los canales en línea. Se están usando los canales de respaldo."
@@ -154,7 +154,11 @@ object ChannelsProvider {
                 sources = listOf(
                     ChannelSource(
                         url = item.getString("url"),
-                        type = ChannelType.STREAM
+                        type = if (item.optString("type").equals("YOUTUBE", ignoreCase = true)) {
+                            ChannelType.YOUTUBE
+                        } else {
+                            ChannelType.STREAM
+                        }
                     )
                 )
             )
