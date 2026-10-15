@@ -4,6 +4,12 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+val generatedChannelsAssets = layout.buildDirectory.dir("generated/channels-assets")
+val copyChannelsJsonToAssets = tasks.register<org.gradle.api.tasks.Copy>("copyChannelsJsonToAssets") {
+    from(rootProject.file("channels.json"))
+    into(generatedChannelsAssets)
+}
+
 android {
     namespace = "com.example.tvaccesibleandroid"
     compileSdk {
@@ -20,6 +26,12 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    sourceSets {
+        getByName("main") {
+            assets.srcDir(generatedChannelsAssets)
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -28,6 +40,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+
+    tasks.named("preBuild").configure {
+        dependsOn(copyChannelsJsonToAssets)
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
