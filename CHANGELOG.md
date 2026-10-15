@@ -5,9 +5,9 @@ stable release of TVAccesibleAndroid.
 
 ### Added
 - Youtube Player with information display.
-- New channel list loading from a JSON source.
+- Channel list loading from a local/online source.
 - New UI with type of stream
-- Channel Model Data STREAM/YOUTUBE 
+- Channel Model Data STREAM/YOUTUBE | ChannelSource
 
 ## [1.1.0] - 2026-10-14
 
