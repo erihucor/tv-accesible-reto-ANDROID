@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.3] - 2026-10-15
+### Added
+- Display an unavailable-channel image when a channel cannot be played.
+
 ## [1.2.2] - 2026-10-15
 ### Improved
 - Prioritize loading the channel list from the online JSON source.
