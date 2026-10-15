@@ -35,6 +35,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.PlaybackException
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Image
 import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -57,6 +58,8 @@ import androidx.compose.foundation.layout.Arrangement
 
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -203,19 +206,28 @@ fun VideoPlayer(
     val source = channel.sources.getOrNull(currentSourceIndex)
     val streamUrl = source?.url.orEmpty()
     val sourceType = source?.type ?: ChannelType.STREAM
+    var channelUnavailable by remember(channel.id) { mutableStateOf(false) }
 
     fun tryNextSource(): Boolean {
-    return if (currentSourceIndex < channel.sources.lastIndex) {
-        currentSourceIndex += 1
-        true
-    } else {
-        false
+        return if (currentSourceIndex < channel.sources.lastIndex) {
+            currentSourceIndex += 1
+            channelUnavailable = false
+            true
+        } else {
+            false
         }
     }
 
     key(channel.id, currentSourceIndex) {
         Box(modifier = Modifier.fillMaxSize()) {
-            if (sourceType == ChannelType.YOUTUBE) {
+            if (channelUnavailable || source == null || streamUrl.isBlank()) {
+                Image(
+                    painter = painterResource(R.drawable.channel_unavailable),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            } else if (sourceType == ChannelType.YOUTUBE) {
                 AndroidView(
                     modifier = Modifier.fillMaxSize(),
                     factory = { ctx ->
@@ -233,11 +245,7 @@ fun VideoPlayer(
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     } else {
-                                        Toast.makeText(
-                                            ctx,
-                                            "No se pudo identificar el video de YouTube",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        channelUnavailable = true
                                     }
                                 }
 
@@ -252,11 +260,7 @@ fun VideoPlayer(
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     } else {
-                                        Toast.makeText(
-                                            ctx,
-                                            "Video no disponible en este reproductor. Abre en YouTube.",
-                                            Toast.LENGTH_LONG
-                                        ).show()
+                                        channelUnavailable = true
                                     }
                                 }
                             })
@@ -277,11 +281,7 @@ fun VideoPlayer(
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 } else {
-                                    Toast.makeText(
-                                        context,
-                                        "El canal no esta disponible, cambie a otro",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    channelUnavailable = true
                                 }
                             }
                         })

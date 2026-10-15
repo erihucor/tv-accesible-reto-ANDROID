@@ -1,46 +1,54 @@
-# TV Accesible (Android)
+# TV Accesible Android - TV en vivo
 
-## 📌 Propósito
-TV Accesible es una aplicación Android diseñada para permitir a personas
-adultas mayores ver televisión abierta de forma inmediata, sin necesidad
-de navegación compleja, botones, clics ni cierres de publicidad.
+Aplicación Android diseñada para facilitar el acceso a contenido de televisión mediante una interfaz sencilla y directa. Evitando registros o menus innecesarios, con especial atención a las necesidades de las personas adultas mayores.
 
-El objetivo principal es reducir al mínimo la interacción requerida por
-el usuario, priorizando una experiencia simple, directa y accesible.
+## Objetivo
 
----
+Reducir la complejidad de uso al mínimo, priorizando la reproducción inmediata del contenido audiovisual y una navegación accesible.
 
-## 🎯 Usuario objetivo
-Personas adultas mayores con acceso a dispositivos Android o Android TV,
-que requieren una forma sencilla y confiable de consumir televisión
-abierta.
+## Características
 
----
+- Reproducción de canales IPTV mediante streams M3U8.
+- Carga de canales desde una fuente JSON en línea.
+- Inicio de la reproducción al abrir la aplicación.
+- Navegación entre canales mediante controles compatibles con Android TV.
+- Reproducción a pantalla completa.
+- Visualización de información del canal.
 
-## 💡 Enfoque de la solución
-La aplicación se diseña bajo los siguientes principios:
+## Tecnologías
 
-- Inicio automático del contenido al abrir la aplicación
-- Interfaz sin botones ni menús de navegación
-- Priorización total del contenido audiovisual
-- Control del entorno de ejecución mediante Android nativo
-- Enfoque en accesibilidad y simplicidad
+- **Plataforma:** Android
+- **Lenguaje:** Kotlin
+- **Reproducción multimedia:** AndroidX Media3 / ExoPlayer
+- **Interfaz:** Jetpack Compose
+- **Entorno de desarrollo:** Android Studio
 
----
+## Descargas
 
-## 🧱 Stack tecnológico
-- Plataforma: Android
-- Lenguaje: Kotlin
-- Reproducción de video: Media3 / ExoPlayer
-- Interfaz de usuario: (XML / Jetpack Compose)
-- Arquitectura: simple, orientada a ejecución inmediata
+Consulta las versiones publicadas y descarga el APK desde la sección de [Releases](../../releases).
 
----
+## Instalación
 
-## 📂 Versiones anteriores
-- Versión Web (descontinuada):  
+1. Descarga el APK de la versión deseada desde GitHub Releases.
+2. Instala el APK en un dispositivo Android compatible.
+3. Abre la aplicación y comprueba la disponibilidad de los canales configurados.
 
-La versión web fue descontinuada debido a limitaciones del navegador del
-sistema y falta de control sobre el entorno de ejecución.  
-Este repositorio representa una reimplementación completa como aplicación
-Android nativa.
+## Desarrollo
+
+Para obtener el código fuente:
+
+```bash
+git clone https://github.com/erihucor/tv-accesible-reto-ANDROID
+```
+
+Abre el proyecto en Android Studio, sincroniza las dependencias de Gradle y ejecútalo en un dispositivo compatible o emulador.
+
+## Historial de cambios
+
+Consulta el archivo [CHANGELOG.md](CHANGELOG.md) para conocer las modificaciones de cada versión.
+
+## Antecedentes
+
+El proyecto comenzó como una aplicación web. Esa versión fue descontinuada debido a las limitaciones del navegador del sistema y al control limitado sobre el entorno de ejecución.
+
+La versión Android representa una reimplementación nativa orientada a mejorar la reproducción multimedia y la experiencia de uso en dispositivos Android y Android TV.
