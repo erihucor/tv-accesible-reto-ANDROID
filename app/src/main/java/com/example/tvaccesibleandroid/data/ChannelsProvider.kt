@@ -1,5 +1,6 @@
 package com.example.tvaccesibleandroid.data
 
+import android.content.res.AssetManager
 import com.example.tvaccesibleandroid.model.Channel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -15,117 +16,15 @@ object ChannelsProvider {
 
     private const val CHANNELS_URL =
         "https://raw.githubusercontent.com/erihucor/tv-accesible-reto-ANDROID/refs/heads/main/channels.json"
+    private const val CHANNELS_ASSET = "channels.json"
 
     fun getFallbackWarningMessage(): String =
-        "No se pudieron obtener los canales en línea. Se están usando los canales de respaldo."
+        "No se pudieron obtener los canales en línea. Se están usando los canales locales."
 
-    private val fallbackChannels = listOf(
-        Channel(
-            id = "00",
-            name = "BLN",
-            sources = listOf(
-                ChannelSource(
-                    url = "https://www.youtube.com/watch?v=MzJllBzHH6Q",
-                    type = ChannelType.YOUTUBE
-                )
-            )
-        ),
-        Channel(
-            id = "01",
-            name = "Oromar",
-            sources = listOf(
-                ChannelSource(
-                    url = "https://stream.oromar.tv/hls/oromartv_hi/index.m3u8"
-                )
-            )
-        ),
-        Channel(
-            id = "02",
-            name = "Oromar Internacional",
-            sources = listOf(
-                ChannelSource(
-                    url = "https://stream.oromar.tv/hls/camriva/index.m3u8"
-                )
-            )
-        ),
-        Channel(
-            id = "03",
-            name = "Ecuador TV",
-            sources = listOf(
-                ChannelSource(
-                    url = "https://video-eu1.streamerr.co/hls/s64029a8fdf/live.m3u8"
-                )
-            )
-        ),
-        Channel(
-            id = "04",
-            name = "RTS",
-            sources = listOf(
-                ChannelSource(
-                    url = "https://d2w3o8zn50cs1k.cloudfront.net/ts:abr.m3u8"
-                )
-            )
-        ),
-        Channel(
-            id = "05",
-            name = "Ecuavisa GUAYAQUIL",
-            sources = listOf(
-                ChannelSource(
-                    url = "https://dai.google.com/linear/hls/event/GyPkTVDZSXGhpOvxPK7m2g/master.m3u8"
-                )
-            )
-        ),
-        Channel(
-            id = "06",
-            name = "Ecuavisa QUITO",
-            sources = listOf(
-                ChannelSource(
-                    url = "https://jireh-8-hls-video-us-isp.dps.live/hls-video/c54ac2799874375c81c1672abb700870537c5223/ecuavisa/ecuavisa.smil/ecuavisa/livestream0/chunks.m3u8?dpssid=b213779049306a876e85ad00b&sid=ba5t1l1xb26747018686a876e85ad009&ndvc=1"
-                )
-            )
-        ),
-        Channel(
-            id = "07",
-            name = "Teleamazonas QUITO",
-            sources = listOf(
-                ChannelSource(
-                    url = "https://teleamazonas-live.cdn.vustreams.com/live/fd4ab346-b4e3-4628-abf0-b5a1bc192428/live.isml/fd4ab346-b4e3-4628-abf0-b5a1bc192428.m3u8"
-                )
-            )
-        ),
-        Channel(
-            id = "08",
-            name = "TVC",
-            sources = listOf(
-                ChannelSource(
-                    url = "https://d2m7i0pvomh4vg.cloudfront.net/ts:abr.m3u8"
-                )
-            )
-        ),
-        Channel(
-            id = "08",
-            name = "El Chavo del 8",
-            sources = listOf(
-                ChannelSource(
-                    url = "https://live20.bozztv.com/giatvplayout7/giatv-211465/playlist.m3u8"
-                )
-            )
-        ),
-        Channel(
-            id = "09",
-            name = "Corazon TV",
-            sources = listOf(
-                ChannelSource(
-                    url = "https://sistemastr.tropicalmoonmedia.com/live/7FFCFEC3978B68D1A2ED0A38DE96AF76/12.m3u8"
-                )
-            )
-        )
-    )
-
-    var channels: List<Channel> = fallbackChannels
+    var channels: List<Channel> = emptyList()
         private set
 
-    suspend fun loadChannels(): Boolean = withContext(Dispatchers.IO) {
+    suspend fun loadChannels(assets: AssetManager): Boolean = withContext(Dispatchers.IO) {
         val remoteChannels = runCatching {
             val json = downloadChannelsJson()
             parseChannels(json)
@@ -134,7 +33,7 @@ object ChannelsProvider {
         val usedFallback = remoteChannels.isNullOrEmpty()
 
         channels = if (usedFallback) {
-            fallbackChannels
+            loadLocalChannels(assets)
         } else {
             remoteChannels
         }
@@ -142,7 +41,12 @@ object ChannelsProvider {
         usedFallback
     }
 
-    fun getFallbackChannels(): List<Channel> = fallbackChannels
+    private fun loadLocalChannels(assets: AssetManager): List<Channel> =
+        assets.open(CHANNELS_ASSET).bufferedReader().use { reader ->
+            parseChannels(reader.readText()).also { localChannels ->
+                require(localChannels.isNotEmpty()) { "El archivo local de canales está vacío." }
+            }
+        }
 
     fun parseChannels(json: String): List<Channel> {
         val jsonArray = JSONArray(json)
