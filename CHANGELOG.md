@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.2] - 2026-10-15
+### Improved
+- Prioritize loading the channel list from the online JSON source.
+- Use the bundled local `channels.json` as a fallback when the online source is unavailable.
+- Generate the bundled channel asset from the root `channels.json` file to keep a single editable source
+
 ## [1.2.1] - 2026-10-15
 ### Fixed
 - Move the JSON to main branch
@@ -36,4 +42,3 @@ First stable release of TVAccesibleAndroid.
 - Splash screen and application launcher icon.
 - Playback behavior and channel switching.
 - Error handling and user feedback.
-

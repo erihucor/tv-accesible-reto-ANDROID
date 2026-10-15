@@ -14,7 +14,7 @@
 - Ocultar barras y controles del sistema
 
 ## feature/channel-management
-- Definición de lista fija de canales
+- Definición de canales en `channels.json`, compartido por la fuente en línea y el respaldo local
 - Asociación canal → stream
 - Cambio funcional entre canales
 

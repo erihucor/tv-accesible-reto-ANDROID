@@ -33,7 +33,7 @@ class ChannelsProviderTest {
     @Test
     fun fallbackWarningMessage_shouldExplainOfflineFallback() {
         assertEquals(
-            "No se pudieron obtener los canales en línea. Se están usando los canales de respaldo.",
+            "No se pudieron obtener los canales en línea. Se están usando los canales locales.",
             ChannelsProvider.getFallbackWarningMessage()
         )
     }

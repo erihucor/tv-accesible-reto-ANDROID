@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
 
     private var wakeLock: PowerManager.WakeLock? = null
 
-    private var channels by mutableStateOf(ChannelsProvider.getFallbackChannels())
+    private var channels by mutableStateOf<List<Channel>>(emptyList())
 
     var currentIndex by mutableStateOf(0)
 
@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launch {
-            val usedFallback = ChannelsProvider.loadChannels()
+            val usedFallback = ChannelsProvider.loadChannels(assets)
             channels = ChannelsProvider.channels
 
             if (usedFallback) {
@@ -111,7 +111,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
-            val currentChannel = channels[currentIndex]
+            val currentChannel = channels.getOrNull(currentIndex)
 
             // Oculta status bar y navegación en Compose
             SideEffect {
@@ -132,11 +132,13 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            VideoPlayer(
-                channel = currentChannel,
-                onNextChannel = goToNextChannel,
-                onPreviousChannel = goToPreviousChannel
-            )
+            if (currentChannel != null) {
+                VideoPlayer(
+                    channel = currentChannel,
+                    onNextChannel = goToNextChannel,
+                    onPreviousChannel = goToPreviousChannel
+                )
+            }
         }
     }
 
@@ -153,12 +155,16 @@ class MainActivity : ComponentActivity() {
         when (keyCode) {
 
             KeyEvent.KEYCODE_DPAD_UP -> {
-                currentIndex = (currentIndex + 1) % channels.size
+                if (channels.isNotEmpty()) {
+                    currentIndex = (currentIndex + 1) % channels.size
+                }
                 return true
             }
 
             KeyEvent.KEYCODE_DPAD_DOWN -> {
-                currentIndex = (currentIndex - 1 + channels.size) % channels.size
+                if (channels.isNotEmpty()) {
+                    currentIndex = (currentIndex - 1 + channels.size) % channels.size
+                }
                 return true
             }
         }
