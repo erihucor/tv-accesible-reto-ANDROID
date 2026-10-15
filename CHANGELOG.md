@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.0] - 2026-10-14
+stable release of TVAccesibleAndroid.
+
+### Added
+- Youtube Player with information display.
+- Channel list loading from a local/online source.
+- New UI with type of stream
+- Channel Model Data STREAM/YOUTUBE | ChannelSource
+
 ## [1.1.0] - 2026-10-14
 
 - Touch Zones controls to changes channels
