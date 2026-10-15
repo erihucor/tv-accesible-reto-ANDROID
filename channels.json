@@ -23,7 +23,7 @@
   {
     "id": "05",
     "name": "RTS",
-    "url": "https://d2w3o8zn50cs1k.cloudfront.net/ts:abr.m3u8"
+    "url": "https://d2h2wh04y3aqtb.cloudfront.net/hls/8v2lejdra382/3_4/index.m3u8"
   },
   {
     "id": "06",
@@ -37,13 +37,13 @@
   },
   {
     "id": "08",
-    "name": "Teleamazonas QUITO",
-    "url": "https://teleamazonas-live.cdn.vustreams.com/live/fd4ab346-b4e3-4628-abf0-b5a1bc192428/live.isml/fd4ab346-b4e3-4628-abf0-b5a1bc192428.m3u8"
+    "name": "Teleamazonas Costa",
+    "url": "https://mdstrm.com/live-stream/6a0dedcb6c7d568efdc8e0d9?access_token=a6IJwtNITpqHkJ6U2GDTry2dsMH3NzLVylOFPk1wrep9X7XBJJBvkLAcOP07xL55ax6vDi2GXrP&type=dvr&player=6945b9bca18f515cff51c75b"
   },
   {
     "id": "09",
     "name": "TVC",
-    "url": "https://d2m7i0pvomh4vg.cloudfront.net/ts:abr.m3u8"
+    "url": "http://157.100.248.242:8080/TVCHD/index.m3u8"
   },
   {
     "id": "10",
@@ -52,7 +52,7 @@
   },
   {
     "id": "11",
-    "name": "Corazon TV",
-    "url": "https://sistemastr.tropicalmoonmedia.com/live/7FFCFEC3978B68D1A2ED0A38DE96AF76/12.m3u8"
+    "name": "PlutoTV - Novelas",
+    "url": "https://ipv4.pluto.tv/api/tn/video/playout/v2/stitch/hls/channel/5dcde0cc2efd2700090b7ff4/3321280/playlist.m3u8?sid=0cf7fb19-0d7b-4bee-b955-bf5f80e5d641&deviceId=803e89cd-87e8-4951-85f0-2de536d94d1f&appName=web&deviceMake=Chrome&jwt=eyJraWQiOiI2OGFmNDU1Mi1mYjc0LTQ3OTgtYjc0ZS0yNTIxY2ZkY2M4OGQiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb3VudHJ5IjoiRUMiLCJzdWIiOiJwcmk6djE6cGx1dG86ZGV2aWNlczpVUzplODI1YTllZi1kYzhkLTQxMDUtOTU0OC0wYmE5NDllOGQzOTUiLCJwcmVmZXJyZWRMYW5ndWFnZSI6ImVzIiwiYXBwVmVyc2lvbiI6IjEwLjEyLjIxNiIsImNsaWVudElEIjoiODAzZTg5Y2QtODdlOC00OTUxLTg1ZjAtMmRlNTM2ZDk0ZDFmIiwiY2l0eSI6IlNhbnRhIEVsZW5hIiwicG9zdGFsQ29kZSI6IiIsImlzcyI6ImJvb3QucGx1dG8udHYiLCJzZXNzaW9uSUQiOiIwY2Y3ZmIxOS0wZDdiLTRiZWUtYjk1NS1iZjVmODBlNWQ2NDEiLCJjbUF1ZGllbmNlSUQiOiIiLCJmZWF0dXJlcyI6eyJtdWx0aVBvZEFkcyI6eyJjb2hvcnQiOiIiLCJlbmFibGVkIjp0cnVlfSwidm9kUHJlcm9sbEFkcyI6eyJjb2hvcnQiOiIiLCJlbmFibGVkIjp0cnVlfSwic3RpdGNoZXJEYXNoTmciOnsiaml0UGFjayI6InJlcGFja0ppdCxkZWNyeXB0In0sInN0aXRjaGVySGxzTmciOnsiZGVtdXhlZEF1ZGlvIjoiaml0In0sInN0aXRjaGVyQWRTZXNzaW9uRXZlbnQiOnsiZW5hYmxlZCI6dHJ1ZX19LCJmbXNQYXJhbXMiOnsiZndWY0lEMiI6IjgwM2U4OWNkLTg3ZTgtNDk1MS04NWYwLTJkZTUzNmQ5NGQxZiIsImZ3VmNJRDJDb3BwYSI6IjgwM2U4OWNkLTg3ZTgtNDk1MS04NWYwLTJkZTUzNmQ5NGQxZiIsImN1c3RvbVBhcmFtcyI6eyJmbXNfbGl2ZXJhbXBfaWRsIjoiIiwiZm1zX2VtYWlsaGFzaCI6IiIsImZtc19zdWJzY3JpYmVyaWQiOiIiLCJmbXNfaWZhIjoiIiwiZm1zX2lkZnYiOiIiLCJmbXNfdXNlcmlkIjoiODAzZTg5Y2QtODdlOC00OTUxLTg1ZjAtMmRlNTM2ZDk0ZDFmIiwiZm1zX3ZjaWQydHlwZSI6InVzZXJpZCIsImZtc19yYW1wX2lkIjoiIiwiZm1zX2hoX3JhbXBfaWQiOiIiLCJmbXNfYmlkaWR0eXBlIjoiIiwiX2Z3XzNQX1VJRCI6IiIsImZtc19ydWxlaWQiOiIxMDAwOSwxMDAxMywxMDAxNCwxMDAxNiwxMDAxNSwxMDAyMCwxMDAyMSwxMDAwMCJ9fSwiZGV2aWNlTG9uIjotODAuODUyMywiY2xpZW50SVAiOiI0NS4xODcuMi4xOSIsImV4cCI6MTc5MjEzNDEzOCwiaWF0IjoxNzkyMDQ3NzM4LCJkcm0iOnsibGV2ZWwiOiJMMyIsIm5hbWUiOiJ3aWRldmluZSJ9LCJqdGkiOiIzYWRhNTA1MS1jNGU2LTQwZjgtYjQzZi0xMzg4Y2ZlNDRkYmIiLCJlMmVCZWFjb25zIjpmYWxzZSwiZGV2aWNlVHlwZSI6IndlYiIsImFwcE5hbWUiOiJ3ZWIiLCJzZXNzaW9uU3RhcnRUaW1lIjoxNzkyMDQ3NzMyODU2LCJkZXZpY2VNYWtlIjoiQ2hyb21lIiwiZGV2aWNlTGF0IjotMi4yMywidGltZVpvbmUiOiJBbWVyaWNhL0d1YXlhcXVpbCIsImRldmljZVZlcnNpb24iOiIxMC4xMi4yMTYiLCJpc0NsaWVudEROVCI6ZmFsc2UsImF1ZCI6IioucGx1dG8udHYiLCJpc09mZmljZUlQIjpmYWxzZSwiZG1hIjowLCJkZXZpY2VNb2RlbCI6ImRlc2t0b3AiLCJhY3RpdmVSZWdpb24iOiJMQVRBTSIsInNlcnZlclNpZGVBZHMiOmZhbHNlfQ.Na-hKLo4Esjq5lNovLQnbOBrEsKq_FpBfr1PQSMLGtM&CMCD=mtp%3D104600%2Cot%3Dm%2Csf%3Dh%2Csid%3D%22b3b12fdc-86ef-4ff8-97b9-74ef0d221324%22&paln=AQzzBGQEGjyvrS2g6zZKmx7nzVFA4hVQ7q5XdSgE6ZyPaHmLcMBuPWdKQM8SUifb5ZdARKLhz6f17MqqsNVYD34tvIw1GkuG4IGTZXfCrliG7ZahT0PRXacfufYO9aD-FVpBqXBuZkrCDpvaB_3rIpUdkKP2gmcM1dWRp12j86JMXRPjfMcoi2Gs8HXHyNVnj-PYj0akMVwxkW39aoOLnVPzxN44Q7Y1_TSp9vBghjDm9qR19_jGR6DXtdZIFOVbHF6wI-Z8H20XdWmQkYpaHVcRQ4RCF1Dw-mLE-AKP-RW_Dr34FeZTcjdCfF-CCayH_fp77p4DU6tq6rYLDRxwp5bAC5P0eJqHoMQhRSbA8jsS_caSPjs3EP0M_CU0fcWnJPzrLOT9NBI8XPuvnXv5GzzX666-s-fiTuDBTu2rhL1-BIAt1czsox1nBxmzGFZW9cNb7vJnVFr2Fx4Ns4HIroXiaNa4FuB35jcoeVqAe9MoDFdQP9sZEpopakdsxoFyAZ3lYNnJSC6QSRoDz9HOv7VIg6vuXa5KQ6H-gG3gB8ik-Q-emMNjtteoqo_9SfSmsuEX7KN7ukDQqOa49wWy8IY2Tl7Ci0DmpyqsBvLGtlqof3I_kXCjU8Idblm42gQRCa2c13ZsEvXFcssFxhPOEq6MCl2XdiqFKpyfJ1vMo0RFvDSA9my2yOXyd9ns5EkApyqlXU5UV2UgEeeYkNyX9TxuHRRU_puCrnT47vdmrA_urr6gXSAIQNUlmomn3lb6epHHCS2kpIruZlm1PZ75vktcVAV9bZKSz6VhZZxU15JiJFtznzxs6NRfec1_tCn4VILMeX9zvc5_LrofFaI75VaIsAS3_nXmdCsIdCOvm7B87O3dYV87LYFCyYheGUTTYD-PYHR9u0LXaX8KH0CNpVk-daVobzHu_RLY3cOXcXAhDlGhz80FijlgNGMhCA_RhPAzlnRENmMmZhhu2gw-V-xnAIkQCmdzYCmkax8baKy6MYI1ZOl7H4GCLTLess3GMM61aM0Hs6eHG7pcrBtQaFkdGsqx03WpvYRLyGMo1F54Vkit3U2MG7PUOC45iHAn4zemsJKcqUtFsdJKBvrpq468CMP9CPsOBdidq2nNblpY6OyDEW4GPs2mVD_mLOwWbj4d62p2vzPVwXIq7MCYpbbOKEge0zQaDuDuVapdPNtq5Oa4EHg"
   }
 ]
