@@ -250,5 +250,33 @@ fun VideoPlayer(
             }
         }
 
+        Row(modifier = Modifier.fillMaxSize()) {
+        // Zona izquierda – canal anterior
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+                        onPreviousChannel()
+                    }
+            )
+
+        // Zona derecha – siguiente canal
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+                        onNextChannel()
+                    }
+            )
+        }
+
     }
 }

@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.1.0] - 2026-10-14
+
+- Touch Zones controls to changes channels
+
+
 ## [1.0.0] - 2026-10-14
 
 First stable release of TVAccesibleAndroid.
