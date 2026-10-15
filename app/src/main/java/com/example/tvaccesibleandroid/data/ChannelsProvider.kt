@@ -14,7 +14,7 @@ import com.example.tvaccesibleandroid.model.ChannelType
 object ChannelsProvider {
 
     private const val CHANNELS_URL =
-        "https://raw.githubusercontent.com/erihucor/tv-accesible-reto-ANDROID/feature/online-channel-prov/channelsV2.json"
+        "https://raw.githubusercontent.com/erihucor/tv-accesible-reto-ANDROID/refs/heads/main/channels.json"
 
     fun getFallbackWarningMessage(): String =
         "No se pudieron obtener los canales en línea. Se están usando los canales de respaldo."
