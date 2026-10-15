@@ -304,53 +304,6 @@ fun VideoPlayer(
                 )
             }
 
-            /*
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-            // Indicador izquierdo
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(
-                            color = Color.Black.copy(alpha = 0.25f),
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ChevronLeft,
-                        contentDescription = "Canal anterior",
-                        tint = Color.White.copy(alpha = 0.85f),
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
-
-            // Indicador derecho
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(
-                            color = Color.Black.copy(alpha = 0.25f),
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ChevronRight,
-                        contentDescription = "Siguiente canal",
-                        tint = Color.White.copy(alpha = 0.85f),
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
-            }
-            */
-
             Row(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
@@ -393,29 +346,6 @@ fun VideoPlayer(
                             maxLines = 1
                             )
                     }
-
-                /*
-                val info = if (channel.sources.isEmpty()) {
-                    "0/0"
-                } else {
-                    "${currentSourceIndex + 1}/${channel.sources.size}"
-                }
-
-                Box(
-                    modifier = Modifier
-                        .background(
-                            Color.Blue,
-                            RoundedCornerShape(2.dp)
-                        )
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
-                ) {
-                    Text(
-                        text = info,
-                        color = Color.White,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }*/
             }
 
             val (backgroundColor, displayText) = when (sourceType) {
