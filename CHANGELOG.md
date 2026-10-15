@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.1] - 2026-10-15
+### Fixed
+- Move the JSON to main branch
+- Unique version of channels file
+
 ## [1.2.0] - 2026-10-14
 stable release of TVAccesibleAndroid.
 
