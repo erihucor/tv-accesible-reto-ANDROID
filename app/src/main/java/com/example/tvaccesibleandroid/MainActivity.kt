@@ -92,11 +92,12 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             val usedFallback = ChannelsProvider.loadChannels(assets)
             channels = ChannelsProvider.channels
-            Log.i(
-                "CHANNELS",
+            Toast.makeText(
+                this@MainActivity,
                 "Carga inicial completada: ${channels.size} canales. " +
-                    "Origen: ${if (usedFallback) "local" else "remoto"}."
-            )
+                    "Origen: ${if (usedFallback) "local" else "remoto"}.",
+                Toast.LENGTH_LONG
+            ).show()
 
             if (usedFallback) {
                 Toast.makeText(
@@ -122,7 +123,11 @@ class MainActivity : ComponentActivity() {
 
                     lastChannelsRefreshAt = SystemClock.elapsedRealtime()
                     try {
-                        Log.i("CHANNELS", "Iniciando actualización automática de canales.")
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Iniciando actualización automática de canales.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         val currentChannelId = channels.getOrNull(currentIndex)?.id
                         val refreshedChannels = ChannelsProvider.refreshChannels()
                         if (refreshedChannels != channels) {
@@ -135,20 +140,30 @@ class MainActivity : ComponentActivity() {
                             } else {
                                 currentIndex.coerceIn(0, (channels.size - 1).coerceAtLeast(0))
                             }
-                            Log.i(
-                                "CHANNELS",
-                                "Actualización completada: ${channels.size} canales; la lista cambió."
-                            )
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Canales actualizados: ${channels.size}.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         } else {
-                            Log.i(
-                                "CHANNELS",
-                                "Actualización completada: ${channels.size} canales; sin cambios."
-                            )
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Actualización completada: sin cambios en los canales.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-                    } catch (error: IOException) {
-                        Log.w("CHANNELS", "No se pudieron actualizar los canales.", error)
-                    } catch (error: JSONException) {
-                        Log.w("CHANNELS", "La respuesta remota de canales no es válida.", error)
+                    } catch (_: IOException) {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "No se pudieron actualizar los canales.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } catch (_: JSONException) {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "La lista de canales recibida no es válida.",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             }
