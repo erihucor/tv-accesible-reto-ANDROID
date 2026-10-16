@@ -10,6 +10,7 @@ Reducir la complejidad de uso al mínimo, priorizando la reproducción inmediata
 
 - Reproducción de canales IPTV mediante streams M3U8.
 - Carga de canales desde una fuente JSON en línea.
+- Actualización de la lista de canales cada cinco minutos mientras la aplicación está activa.
 - Inicio de la reproducción al abrir la aplicación.
 - Navegación entre canales mediante controles compatibles con Android TV.
 - Reproducción a pantalla completa.
