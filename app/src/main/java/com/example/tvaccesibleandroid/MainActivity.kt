@@ -74,7 +74,7 @@ import org.json.JSONException
 class MainActivity : ComponentActivity() {
 
     private companion object {
-        const val CHANNEL_REFRESH_INTERVAL_MS = 60_000L
+        const val CHANNEL_REFRESH_INTERVAL_MS = 4 * 60 * 1000L
         const val CHANNEL_REFRESH_LOG_TAG = "ChannelRefresh"
     }
 
