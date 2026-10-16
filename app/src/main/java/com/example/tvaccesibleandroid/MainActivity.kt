@@ -3,13 +3,17 @@ package com.example.tvaccesibleandroid
 import android.content.Context
 import android.os.Bundle
 import android.os.PowerManager
+import android.os.SystemClock
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 import androidx.compose.foundation.layout.fillMaxSize
@@ -64,12 +68,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import android.view.KeyEvent
+import java.io.IOException
+import org.json.JSONException
 
 class MainActivity : ComponentActivity() {
+
+    private companion object {
+        const val CHANNEL_REFRESH_INTERVAL_MS = 5 * 60 * 1000L
+    }
 
     private var wakeLock: PowerManager.WakeLock? = null
 
     private var channels by mutableStateOf<List<Channel>>(emptyList())
+    private var lastChannelsRefreshAt = 0L
 
     var currentIndex by mutableStateOf(0)
 
@@ -93,6 +104,38 @@ class MainActivity : ComponentActivity() {
 
             if (channels.isNotEmpty() && currentIndex >= channels.size) {
                 currentIndex = 0
+            }
+
+            lastChannelsRefreshAt = SystemClock.elapsedRealtime()
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (true) {
+                    val elapsedSinceRefresh =
+                        SystemClock.elapsedRealtime() - lastChannelsRefreshAt
+                    val delayUntilRefresh =
+                        (CHANNEL_REFRESH_INTERVAL_MS - elapsedSinceRefresh).coerceAtLeast(0L)
+                    delay(delayUntilRefresh)
+
+                    lastChannelsRefreshAt = SystemClock.elapsedRealtime()
+                    try {
+                        val currentChannelId = channels.getOrNull(currentIndex)?.id
+                        val refreshedChannels = ChannelsProvider.refreshChannels()
+                        if (refreshedChannels != channels) {
+                            channels = refreshedChannels
+                            val retainedIndex = currentChannelId?.let { id ->
+                                channels.indexOfFirst { it.id == id }
+                            } ?: -1
+                            currentIndex = if (retainedIndex >= 0) {
+                                retainedIndex
+                            } else {
+                                currentIndex.coerceIn(0, (channels.size - 1).coerceAtLeast(0))
+                            }
+                        }
+                    } catch (error: IOException) {
+                        Log.w("CHANNELS", "No se pudieron actualizar los canales.", error)
+                    } catch (error: JSONException) {
+                        Log.w("CHANNELS", "La respuesta remota de canales no es válida.", error)
+                    }
+                }
             }
         }
 
@@ -218,7 +261,7 @@ fun VideoPlayer(
         }
     }
 
-    key(channel.id, currentSourceIndex) {
+    key(channel.id, currentSourceIndex, streamUrl) {
         Box(modifier = Modifier.fillMaxSize()) {
             if (channelUnavailable || source == null || streamUrl.isBlank()) {
                 Image(
