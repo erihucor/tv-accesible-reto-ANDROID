@@ -74,7 +74,7 @@ import org.json.JSONException
 class MainActivity : ComponentActivity() {
 
     private companion object {
-        const val CHANNEL_REFRESH_INTERVAL_MS = 5 * 60 * 1000L
+        const val CHANNEL_REFRESH_INTERVAL_MS = 1 * 60 * 1000L
     }
 
     private var wakeLock: PowerManager.WakeLock? = null
