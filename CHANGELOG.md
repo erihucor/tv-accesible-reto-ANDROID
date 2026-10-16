@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.0] - 2026-10-15
+### Added
+- Automatically refresh the channel list every minute while the app is active, keeping the current channel selected when it remains available.
+
+
 ## [1.2.3] - 2026-10-15
 ### Added
 - Display an unavailable-channel image when a channel cannot be played.
