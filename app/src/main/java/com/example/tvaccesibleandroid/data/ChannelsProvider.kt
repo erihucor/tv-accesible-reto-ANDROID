@@ -41,6 +41,18 @@ object ChannelsProvider {
         usedFallback
     }
 
+    suspend fun refreshChannels(): List<Channel> =
+        withContext(Dispatchers.IO) {
+            val remoteChannels = parseChannels(downloadChannelsJson())
+            if (remoteChannels.isEmpty()) {
+                throw IOException("El archivo remoto de canales está vacío.")
+            }
+
+            remoteChannels.also { updatedChannels ->
+                channels = updatedChannels
+            }
+        }
+
     private fun loadLocalChannels(assets: AssetManager): List<Channel> =
         assets.open(CHANNELS_ASSET).bufferedReader().use { reader ->
             parseChannels(reader.readText()).also { localChannels ->
@@ -71,16 +83,24 @@ object ChannelsProvider {
 
     private fun downloadChannelsJson(): String {
         val connection = URL(CHANNELS_URL).openConnection() as HttpURLConnection
-        connection.connectTimeout = 15_000
-        connection.readTimeout = 15_000
-        connection.requestMethod = "GET"
-        connection.doInput = true
+        try {
+            connection.connectTimeout = 15_000
+            connection.readTimeout = 15_000
+            connection.requestMethod = "GET"
+            connection.doInput = true
+            connection.useCaches = false
+            connection.setRequestProperty("Cache-Control", "no-cache")
 
-        if (connection.responseCode != HttpURLConnection.HTTP_OK) {
-            throw IOException("No se pudo obtener el archivo de canales: ${connection.responseCode}")
+            if (connection.responseCode != HttpURLConnection.HTTP_OK) {
+                throw IOException(
+                    "No se pudo obtener el archivo de canales: ${connection.responseCode}"
+                )
+            }
+
+            return connection.inputStream.bufferedReader().use { it.readText() }
+        } finally {
+            connection.disconnect()
         }
-
-        return connection.inputStream.bufferedReader().use { it.readText() }
     }
 
     fun getById(id: String): Channel? =
