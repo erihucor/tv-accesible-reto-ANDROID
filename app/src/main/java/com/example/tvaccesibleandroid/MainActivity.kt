@@ -75,6 +75,7 @@ class MainActivity : ComponentActivity() {
 
     private companion object {
         const val CHANNEL_REFRESH_INTERVAL_MS = 60_000L
+        const val CHANNEL_REFRESH_LOG_TAG = "ChannelRefresh"
     }
 
     private var wakeLock: PowerManager.WakeLock? = null
@@ -92,19 +93,14 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             val usedFallback = ChannelsProvider.loadChannels(assets)
             channels = ChannelsProvider.channels
-            Toast.makeText(
-                this@MainActivity,
+            Log.i(
+                CHANNEL_REFRESH_LOG_TAG,
                 "Carga inicial completada: ${channels.size} canales. " +
-                    "Origen: ${if (usedFallback) "local" else "remoto"}.",
-                Toast.LENGTH_LONG
-            ).show()
+                    "Origen: ${if (usedFallback) "local" else "remoto"}."
+            )
 
             if (usedFallback) {
-                Toast.makeText(
-                    this@MainActivity,
-                    ChannelsProvider.getFallbackWarningMessage(),
-                    Toast.LENGTH_LONG
-                ).show()
+                Log.w(CHANNEL_REFRESH_LOG_TAG, ChannelsProvider.getFallbackWarningMessage())
             }
 
 
@@ -123,11 +119,7 @@ class MainActivity : ComponentActivity() {
 
                     lastChannelsRefreshAt = SystemClock.elapsedRealtime()
                     try {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Iniciando actualización automática de canales.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Log.i(CHANNEL_REFRESH_LOG_TAG, "Iniciando actualización automática de canales.")
                         val currentChannelId = channels.getOrNull(currentIndex)?.id
                         val refreshedChannels = ChannelsProvider.refreshChannels()
                         if (refreshedChannels != channels) {
@@ -140,30 +132,17 @@ class MainActivity : ComponentActivity() {
                             } else {
                                 currentIndex.coerceIn(0, (channels.size - 1).coerceAtLeast(0))
                             }
-                            Toast.makeText(
-                                this@MainActivity,
-                                "Canales actualizados: ${channels.size}.",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Log.i(CHANNEL_REFRESH_LOG_TAG, "Canales actualizados: ${channels.size}.")
                         } else {
-                            Toast.makeText(
-                                this@MainActivity,
-                                "Actualización completada: sin cambios en los canales.",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Log.i(
+                                CHANNEL_REFRESH_LOG_TAG,
+                                "Actualización completada: sin cambios en los canales."
+                            )
                         }
-                    } catch (_: IOException) {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "No se pudieron actualizar los canales.",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    } catch (_: JSONException) {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "La lista de canales recibida no es válida.",
-                            Toast.LENGTH_LONG
-                        ).show()
+                    } catch (error: IOException) {
+                        Log.e(CHANNEL_REFRESH_LOG_TAG, "No se pudieron actualizar los canales.", error)
+                    } catch (error: JSONException) {
+                        Log.e(CHANNEL_REFRESH_LOG_TAG, "La lista de canales recibida no es válida.", error)
                     }
                 }
             }
