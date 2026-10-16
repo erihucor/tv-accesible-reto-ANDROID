@@ -74,7 +74,7 @@ import org.json.JSONException
 class MainActivity : ComponentActivity() {
 
     private companion object {
-        const val CHANNEL_REFRESH_INTERVAL_MS = 1 * 60 * 1000L
+        const val CHANNEL_REFRESH_INTERVAL_MS = 60_000L
     }
 
     private var wakeLock: PowerManager.WakeLock? = null
@@ -92,6 +92,11 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             val usedFallback = ChannelsProvider.loadChannels(assets)
             channels = ChannelsProvider.channels
+            Log.i(
+                "CHANNELS",
+                "Carga inicial completada: ${channels.size} canales. " +
+                    "Origen: ${if (usedFallback) "local" else "remoto"}."
+            )
 
             if (usedFallback) {
                 Toast.makeText(
@@ -117,6 +122,7 @@ class MainActivity : ComponentActivity() {
 
                     lastChannelsRefreshAt = SystemClock.elapsedRealtime()
                     try {
+                        Log.i("CHANNELS", "Iniciando actualización automática de canales.")
                         val currentChannelId = channels.getOrNull(currentIndex)?.id
                         val refreshedChannels = ChannelsProvider.refreshChannels()
                         if (refreshedChannels != channels) {
@@ -129,6 +135,15 @@ class MainActivity : ComponentActivity() {
                             } else {
                                 currentIndex.coerceIn(0, (channels.size - 1).coerceAtLeast(0))
                             }
+                            Log.i(
+                                "CHANNELS",
+                                "Actualización completada: ${channels.size} canales; la lista cambió."
+                            )
+                        } else {
+                            Log.i(
+                                "CHANNELS",
+                                "Actualización completada: ${channels.size} canales; sin cambios."
+                            )
                         }
                     } catch (error: IOException) {
                         Log.w("CHANNELS", "No se pudieron actualizar los canales.", error)
