@@ -1,0 +1,58 @@
+[
+  {
+    "id": "01",
+    "name": "Oromar",
+    "url" : "https://stream.oromar.tv/hls/oromartv_hi/index.m3u8"
+  },
+  {
+    "id": "02",
+    "name": "Oromar Internacional",
+    "url" : "https://stream.oromar.tv/hls/camriva/index.m3u8"
+  },
+  {
+    "id": "03",
+    "name": "BLN 15 DE OCTUBRE",
+    "url": "https://www.youtube.com/watch?v=FUICa3suEDY",
+    "type": "YOUTUBE"
+  },
+  {
+    "id": "04",
+    "name": "Ecuador TV",
+    "url": "https://video-eu1.streamerr.co/hls/s64029a8fdf/live.m3u8"
+  },
+  {
+    "id": "05",
+    "name": "RTS",
+    "url": "https://d2h2wh04y3aqtb.cloudfront.net/hls/8v2lejdra382/3_4/index.m3u8"
+  },
+  {
+    "id": "06",
+    "name": "Ecuavisa GUAYAQUIL",
+    "url": "https://dai.google.com/linear/hls/event/GyPkTVDZSXGhpOvxPK7m2g/master.m3u8"
+  },
+  {
+    "id": "07",
+    "name": "Ecuavisa QUITO",
+    "url": "https://jireh-8-hls-video-us-isp.dps.live/hls-video/c54ac2799874375c81c1672abb700870537c5223/ecuavisa/ecuavisa.smil/ecuavisa/livestream0/chunks.m3u8?dpssid=b213779049306a876e85ad00b&sid=ba5t1l1xb26747018686a876e85ad009&ndvc=1"
+  },
+  {
+    "id": "08",
+    "name": "Teleamazonas Sierra",
+    "url": "http://157.100.248.242:8080/TeleamazonasHD/index.m3u8"
+  },
+  {
+    "id": "09",
+    "name": "TVC",
+    "url": "http://157.100.248.242:8080/TVCHD/index.m3u8"
+  },
+  {
+    "id": "10",
+    "name": "El Chavo del 8",
+    "url": "https://live20.bozztv.com/giatvplayout7/giatv-211465/playlist.m3u8"
+  },
+  {
+    "id": "11",
+    "name": "PlutoTV - Novelas",
+    "url": "http://157.100.248.242:8080/TeleamazonasHD2/index.m3u8"
+  }
+]
