@@ -17,6 +17,9 @@ object ChannelsProvider {
     private const val CHANNELS_URL =
         "https://raw.githubusercontent.com/erihucor/tv-accesible-reto-ANDROID/refs/heads/main/channels.json"
     private const val CHANNELS_ASSET = "channels.json"
+    private val channelRepository = ChannelRepository(
+        providers = listOf(DailyYouTubeChannelProvider())
+    )
 
     fun getFallbackWarningMessage(): String =
         "No se pudieron obtener los canales en línea. Se están usando los canales locales."
@@ -32,11 +35,12 @@ object ChannelsProvider {
 
         val usedFallback = remoteChannels.isNullOrEmpty()
 
-        channels = if (usedFallback) {
+        val baseChannels = if (usedFallback) {
             loadLocalChannels(assets)
         } else {
             remoteChannels
         }
+        channels = channelRepository.merge(baseChannels)
 
         usedFallback
     }
@@ -48,7 +52,7 @@ object ChannelsProvider {
                 throw IOException("El archivo remoto de canales está vacío.")
             }
 
-            remoteChannels.also { updatedChannels ->
+            channelRepository.merge(remoteChannels).also { updatedChannels ->
                 channels = updatedChannels
             }
         }
