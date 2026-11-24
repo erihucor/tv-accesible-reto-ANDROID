@@ -1,19 +1,13 @@
 [
   {
-    "id": "00",
-    "name": "Guayaquil DEBATE CNE",
-    "url" : "https://www.youtube.com/watch?v=noYM5el1mVs",
-    "type": "YOUTUBE"
-  },
-  {
     "id": "01",
     "name": "Oromar",
     "url" : "https://stream.oromar.tv/hls/oromartv_hi/index.m3u8"
   },
   {
     "id": "02",
-    "name": "BLN 20 DE NOVIEMBRE",
-    "url": "https://www.youtube.com/watch?v=U_n5zfwm24E",
+    "name": "BLN 23 DE NOVIEMBRE",
+    "url": "https://www.youtube.com/watch?v=RI8Z0gnTS5A",
     "type": "YOUTUBE"
   },
   {
