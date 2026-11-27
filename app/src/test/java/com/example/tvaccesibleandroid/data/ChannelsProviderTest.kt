@@ -39,10 +39,14 @@ class ChannelsProviderTest {
     }
 
     @Test
-    fun dailyProvider_shouldCreateYoutubeChannelWithStableId() {
-        val provider = DailyYouTubeChannelProvider {
-            DailyYouTubeChannelProvider.TEST_VIDEO_URL
-        }
+    fun dailyProvider_shouldPassSearchTermAndCreateYoutubeChannelWithStableId() {
+        val provider = DailyYouTubeChannelProvider(
+            searchTerm = "gatos",
+            dailyVideoUrlProvider = { searchTerm ->
+                assertEquals("gatos", searchTerm)
+                DailyYouTubeChannelProvider.TEST_VIDEO_URL
+            }
+        )
 
         val channel = kotlinx.coroutines.runBlocking {
             provider.loadChannels().single()
@@ -51,6 +55,23 @@ class ChannelsProviderTest {
         assertEquals(DailyYouTubeChannelProvider.CHANNEL_ID, channel.id)
         assertEquals(ChannelType.YOUTUBE, channel.primarySource?.type)
         assertEquals(DailyYouTubeChannelProvider.TEST_VIDEO_URL, channel.url)
+    }
+
+    @Test
+    fun parseFirstVideoUrl_shouldReturnYoutubeUrlForFirstSearchResult() {
+        val response = """
+            {"items":[{"id":{"kind":"youtube#video","videoId":"abc123"}}]}
+        """.trimIndent()
+
+        assertEquals(
+            "https://www.youtube.com/watch?v=abc123",
+            DailyYouTubeChannelProvider.parseFirstVideoUrl(response)
+        )
+    }
+
+    @Test(expected = java.io.IOException::class)
+    fun parseFirstVideoUrl_shouldFailWhenSearchHasNoResults() {
+        DailyYouTubeChannelProvider.parseFirstVideoUrl("""{"items":[]}""")
     }
 
     @Test

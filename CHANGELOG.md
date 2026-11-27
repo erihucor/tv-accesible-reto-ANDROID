@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+### Added
+- Add a "Video del dia" YouTube channel that searches YouTube Data API v3 for the configured search term and merges the first result into the channel catalog.
+- Load the YouTube API key from the local `local.properties` file.
+
 ## [1.3.0] - 2026-10-15
 ### Added
 - Automatically refresh the channel list every minute while the app is active, keeping the current channel selected when it remains available.
