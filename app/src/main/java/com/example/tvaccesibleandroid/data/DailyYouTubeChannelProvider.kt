@@ -13,14 +13,14 @@ import java.net.URL
 import java.net.URLEncoder
 
 class DailyYouTubeChannelProvider(
-    private val searchTerm: String = DEFAULT_SEARCH_TERM,
+    val searchTerm: String = DEFAULT_SEARCH_TERM,
     private val dailyVideoUrlProvider: suspend (String) -> String = Companion::searchVideoUrl
 ) : ChannelCatalogProvider {
 
     companion object {
-        const val DEFAULT_SEARCH_TERM = "Samsung QLED 4K Demo Video : Dominic Nature"
-        const val CHANNEL_ID = "video-del-dia"
-        const val CHANNEL_NAME = "Video del dia"
+        const val DEFAULT_SEARCH_TERM = "Rocky 50th Anniversary Trailer (2026)"
+        const val CHANNEL_ID = "00"
+        const val CHANNEL_NAME = "Busqueda API Youtube"
         const val TEST_VIDEO_URL =
             "https://www.youtube.com/watch?v=x91MPoITQ3I"
 
@@ -74,7 +74,7 @@ class DailyYouTubeChannelProvider(
     }
 
     override suspend fun loadChannels(): List<Channel> {
-        val videoUrl = TEST_VIDEO_URL//dailyVideoUrlProvider(searchTerm).trim()
+        val videoUrl = dailyVideoUrlProvider(searchTerm).trim()
         if (videoUrl.isBlank()) {
             return emptyList()
         }

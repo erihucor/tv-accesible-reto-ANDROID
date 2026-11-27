@@ -1,6 +1,7 @@
 package com.example.tvaccesibleandroid.data
 
 import android.content.res.AssetManager
+import android.util.Log
 import com.example.tvaccesibleandroid.model.Channel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -17,14 +18,21 @@ object ChannelsProvider {
     private const val CHANNELS_URL =
         "https://raw.githubusercontent.com/erihucor/tv-accesible-reto-ANDROID/refs/heads/main/channels.json"
     private const val CHANNELS_ASSET = "channels.json"
+    private val dailyYouTubeChannelProvider = DailyYouTubeChannelProvider()
     private val channelRepository = ChannelRepository(
-        providers = listOf(DailyYouTubeChannelProvider())
+        providers = listOf(dailyYouTubeChannelProvider)
     )
+
+    val dailyVideoSearchTerm: String
+        get() = dailyYouTubeChannelProvider.searchTerm
 
     fun getFallbackWarningMessage(): String =
         "No se pudieron obtener los canales en línea. Se están usando los canales locales."
 
     var channels: List<Channel> = emptyList()
+        private set
+
+    var lastDynamicProviderError: String? = null
         private set
 
     suspend fun loadChannels(assets: AssetManager): Boolean = withContext(Dispatchers.IO) {
@@ -40,7 +48,7 @@ object ChannelsProvider {
         } else {
             remoteChannels
         }
-        channels = channelRepository.merge(baseChannels)
+        channels = mergeDynamicChannels(baseChannels)
 
         usedFallback
     }
@@ -52,10 +60,24 @@ object ChannelsProvider {
                 throw IOException("El archivo remoto de canales está vacío.")
             }
 
-            channelRepository.merge(remoteChannels).also { updatedChannels ->
+            mergeDynamicChannels(remoteChannels).also { updatedChannels ->
                 channels = updatedChannels
             }
         }
+
+    private suspend fun mergeDynamicChannels(baseChannels: List<Channel>): List<Channel> {
+        lastDynamicProviderError = null
+        return channelRepository.merge(baseChannels) { provider, error ->
+            Log.e(
+                "ChannelsProvider",
+                "No se pudieron cargar canales desde ${provider.javaClass.simpleName}: " +
+                    (error.message ?: "error sin mensaje."),
+                error
+            )
+            lastDynamicProviderError = error.message
+                ?: "Error inesperado en ${provider.javaClass.simpleName}."
+        }
+    }
 
     private fun loadLocalChannels(assets: AssetManager): List<Channel> =
         assets.open(CHANNELS_ASSET).bufferedReader().use { reader ->

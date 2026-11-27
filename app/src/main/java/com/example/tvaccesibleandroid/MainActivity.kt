@@ -91,8 +91,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launch {
+            Log.i(
+                CHANNEL_REFRESH_LOG_TAG,
+                "Iniciando búsqueda de video en YouTube: ${ChannelsProvider.dailyVideoSearchTerm}"
+            )
             val usedFallback = ChannelsProvider.loadChannels(assets)
             channels = ChannelsProvider.channels
+            logDailyVideoLoadResult()
             Log.i(
                 CHANNEL_REFRESH_LOG_TAG,
                 "Carga inicial completada: ${channels.size} canales. " +
@@ -133,7 +138,15 @@ class MainActivity : ComponentActivity() {
                                 currentIndex.coerceIn(0, (channels.size - 1).coerceAtLeast(0))
                             }
                             Log.i(CHANNEL_REFRESH_LOG_TAG, "Canales actualizados: ${channels.size}.")
+                            if (ChannelsProvider.lastDynamicProviderError != null) {
+                                logDynamicProviderError()
+                            } else if (channels.any { it.id == "video-del-dia" }) {
+                                Log.i(CHANNEL_REFRESH_LOG_TAG, "El canal Video del día se actualizó.")
+                            }
                         } else {
+                            if (ChannelsProvider.lastDynamicProviderError != null) {
+                                logDynamicProviderError()
+                            }
                             Log.i(
                                 CHANNEL_REFRESH_LOG_TAG,
                                 "Actualización completada: sin cambios en los canales."
@@ -226,6 +239,27 @@ class MainActivity : ComponentActivity() {
 
         return super.onKeyDown(keyCode, event)
     }
+
+    private fun logDailyVideoLoadResult() {
+        val providerError = ChannelsProvider.lastDynamicProviderError
+        when {
+            providerError != null -> logDynamicProviderError()
+            channels.any { it.id == "video-del-dia" } ->
+                Log.i(CHANNEL_REFRESH_LOG_TAG, "Video encontrado y agregado al catálogo.")
+            else ->
+                Log.w(
+                    CHANNEL_REFRESH_LOG_TAG,
+                    "La búsqueda terminó, pero el canal no aparece en el catálogo."
+                )
+        }
+    }
+
+    private fun logDynamicProviderError() {
+        val message =
+            "Falló la búsqueda del Video del día: " +
+                (ChannelsProvider.lastDynamicProviderError ?: "error desconocido.")
+        Log.e(CHANNEL_REFRESH_LOG_TAG, message)
+    }
 }
 
 internal fun buildYouTubeVideoId(url: String): String? {
@@ -298,6 +332,10 @@ fun VideoPlayer(
                                         ).show()
                                     } else {
                                         channelUnavailable = true
+                                        Log.e(
+                                            "YouTubePlayer",
+                                            "No se pudo reproducir el video: URL de YouTube inválida."
+                                        )
                                     }
                                 }
 
@@ -313,6 +351,10 @@ fun VideoPlayer(
                                         ).show()
                                     } else {
                                         channelUnavailable = true
+                                        Log.e(
+                                            "YouTubePlayer",
+                                            "No se pudo reproducir el video de YouTube: $error"
+                                        )
                                     }
                                 }
                             })

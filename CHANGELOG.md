@@ -4,6 +4,7 @@
 ### Added
 - Add a "Video del dia" YouTube channel that searches YouTube Data API v3 for the configured search term and merges the first result into the channel catalog.
 - Load the YouTube API key from the local `local.properties` file.
+- Show diagnostic messages for YouTube search, catalog merge, and playback failures.
 
 ## [1.3.0] - 2026-10-15
 ### Added

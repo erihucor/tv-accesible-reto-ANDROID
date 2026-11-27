@@ -1,16 +1,23 @@
 package com.example.tvaccesibleandroid.data
 
 import com.example.tvaccesibleandroid.model.Channel
+import kotlinx.coroutines.CancellationException
 
 class ChannelRepository(
     private val providers: List<ChannelCatalogProvider>
 ) {
-    suspend fun merge(baseChannels: List<Channel>): List<Channel> {
+    suspend fun merge(
+        baseChannels: List<Channel>,
+        onProviderError: (ChannelCatalogProvider, Exception) -> Unit
+    ): List<Channel> {
         val dynamicChannels = providers
             .flatMap { provider ->
                 try {
                     provider.loadChannels()
-                } catch (_: Exception) {
+                } catch (error: CancellationException) {
+                    throw error
+                } catch (error: Exception) {
+                    onProviderError(provider, error)
                     emptyList()
                 }
             }
