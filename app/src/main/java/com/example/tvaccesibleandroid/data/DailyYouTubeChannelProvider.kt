@@ -12,7 +12,7 @@ class DailyYouTubeChannelProvider(
         const val CHANNEL_ID = "video-del-dia"
         const val CHANNEL_NAME = "Video del dia"
         const val TEST_VIDEO_URL =
-            "https://www.youtube.com/watch?v=u8x4H9AOpCo"
+            "https://www.youtube.com/watch?v=x91MPoITQ3I"
 
         suspend fun getDailyVideoUrl(): String = TEST_VIDEO_URL
     }
