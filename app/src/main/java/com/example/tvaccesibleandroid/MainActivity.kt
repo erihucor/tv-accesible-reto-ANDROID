@@ -57,6 +57,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.foundation.layout.Arrangement
 
@@ -75,6 +76,7 @@ class MainActivity : ComponentActivity() {
 
     private companion object {
         const val CHANNEL_REFRESH_INTERVAL_MS = 4 * 60 * 1000L
+        const val CHANNEL_REFRESH_INDICATOR_DURATION_MS = 3 * 1000L
         const val CHANNEL_REFRESH_LOG_TAG = "ChannelRefresh"
     }
 
@@ -82,6 +84,7 @@ class MainActivity : ComponentActivity() {
 
     private var channels by mutableStateOf<List<Channel>>(emptyList())
     private var lastChannelsRefreshAt = 0L
+    private var refreshIndicatorVersion by mutableIntStateOf(0)
 
     var currentIndex by mutableStateOf(0)
 
@@ -157,6 +160,7 @@ class MainActivity : ComponentActivity() {
                     } catch (error: JSONException) {
                         Log.e(CHANNEL_REFRESH_LOG_TAG, "La lista de canales recibida no es válida.", error)
                     }
+                    refreshIndicatorVersion++
                 }
             }
         }
@@ -180,6 +184,15 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             val currentChannel = channels.getOrNull(currentIndex)
+            var showRefreshIndicator by remember { mutableStateOf(false) }
+
+            LaunchedEffect(refreshIndicatorVersion) {
+                if (refreshIndicatorVersion > 0) {
+                    showRefreshIndicator = true
+                    delay(CHANNEL_REFRESH_INDICATOR_DURATION_MS)
+                    showRefreshIndicator = false
+                }
+            }
 
             // Oculta status bar y navegación en Compose
             SideEffect {
@@ -201,11 +214,33 @@ class MainActivity : ComponentActivity() {
             }
 
             if (currentChannel != null) {
-                VideoPlayer(
-                    channel = currentChannel,
-                    onNextChannel = goToNextChannel,
-                    onPreviousChannel = goToPreviousChannel
-                )
+                Box(modifier = Modifier.fillMaxSize()) {
+                    VideoPlayer(
+                        channel = currentChannel,
+                        onNextChannel = goToNextChannel,
+                        onPreviousChannel = goToPreviousChannel
+                    )
+
+                    if (showRefreshIndicator) {
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.TopStart)
+                                .padding(16.dp)
+                                .background(
+                                    color = Color.Black.copy(alpha = 0.6f),
+                                    shape = CircleShape
+                                )
+                                .padding(10.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Refresh,
+                                contentDescription = "Actualización de canales finalizada",
+                                tint = Color.White,
+                                modifier = Modifier.size(28.dp)
+                            )
+                        }
+                    }
+                }
             }
         }
     }
