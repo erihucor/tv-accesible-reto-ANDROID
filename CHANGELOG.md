@@ -2,9 +2,13 @@
 
 ## [Unreleased]
 ### Added
-- Add a "Video del dia" YouTube channel that searches YouTube Data API v3 for the configured search term and merges the first result into the channel catalog.
+- Add a BLN YouTube channel by merging the first result for its dedicated search term into the channel catalog.
 - Load the YouTube API key from the local `local.properties` file.
 - Show diagnostic messages for YouTube search, catalog merge, and playback failures.
+
+### Improved
+- Separate generic YouTube API searching into `YouTubeSearchClient` and rename the BLN provider to `BlnYouTubeChannelProvider`.
+- Show a refresh icon for three seconds after each automatic channel refresh.
 
 ## [1.3.0] - 2026-10-15
 ### Added

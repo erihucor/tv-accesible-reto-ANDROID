@@ -6,6 +6,8 @@ import com.example.tvaccesibleandroid.model.ChannelType
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
+private const val TEST_VIDEO_URL = "https://www.youtube.com/watch?v=x91MPoITQ3I"
+
 class ChannelsProviderTest {
 
     @Test
@@ -39,12 +41,12 @@ class ChannelsProviderTest {
     }
 
     @Test
-    fun dailyProvider_shouldPassSearchTermAndCreateYoutubeChannelWithStableId() {
-        val provider = DailyYouTubeChannelProvider(
-            searchTerm = "gatos",
-            dailyVideoUrlProvider = { searchTerm ->
-                assertEquals("gatos", searchTerm)
-                DailyYouTubeChannelProvider.TEST_VIDEO_URL
+    fun dailyProvider_shouldSearchBLNAndCreateYoutubeChannelWithStableId() {
+        var receivedSearchTerm: String? = null
+        val provider = BlnYouTubeChannelProvider(
+            searchVideoUrl = { searchTerm ->
+                receivedSearchTerm = searchTerm
+                TEST_VIDEO_URL
             }
         )
 
@@ -52,9 +54,28 @@ class ChannelsProviderTest {
             provider.loadChannels().single()
         }
 
-        assertEquals(DailyYouTubeChannelProvider.CHANNEL_ID, channel.id)
+        assertEquals(BlnYouTubeChannelProvider.BLN_SEARCH_TERM, receivedSearchTerm)
+        assertEquals(BlnYouTubeChannelProvider.CHANNEL_ID, channel.id)
         assertEquals(ChannelType.YOUTUBE, channel.primarySource?.type)
-        assertEquals(DailyYouTubeChannelProvider.TEST_VIDEO_URL, channel.url)
+        assertEquals(TEST_VIDEO_URL, channel.url)
+    }
+
+    @Test
+    fun searchVideoUrlBLN_shouldUseSpecificSearchTerm() {
+        var receivedSearchTerm: String? = null
+        val provider = BlnYouTubeChannelProvider(
+            searchVideoUrl = { searchTerm ->
+                receivedSearchTerm = searchTerm
+                TEST_VIDEO_URL
+            }
+        )
+
+        val result = kotlinx.coroutines.runBlocking {
+            provider.searchVideoUrlBLN()
+        }
+
+        assertEquals(BlnYouTubeChannelProvider.BLN_SEARCH_TERM, receivedSearchTerm)
+        assertEquals(TEST_VIDEO_URL, result)
     }
 
     @Test
@@ -65,13 +86,13 @@ class ChannelsProviderTest {
 
         assertEquals(
             "https://www.youtube.com/watch?v=abc123",
-            DailyYouTubeChannelProvider.parseFirstVideoUrl(response)
+            YouTubeSearchClient.parseFirstVideoUrl(response)
         )
     }
 
     @Test(expected = java.io.IOException::class)
     fun parseFirstVideoUrl_shouldFailWhenSearchHasNoResults() {
-        DailyYouTubeChannelProvider.parseFirstVideoUrl("""{"items":[]}""")
+        YouTubeSearchClient.parseFirstVideoUrl("""{"items":[]}""")
     }
 
     @Test
@@ -82,11 +103,11 @@ class ChannelsProviderTest {
             listOf(ChannelSource("https://example.com/live.m3u8"))
         )
         val dynamicChannel = Channel(
-            DailyYouTubeChannelProvider.CHANNEL_ID,
-            DailyYouTubeChannelProvider.CHANNEL_NAME,
+            BlnYouTubeChannelProvider.CHANNEL_ID,
+            BlnYouTubeChannelProvider.CHANNEL_NAME,
             listOf(
                 ChannelSource(
-                    DailyYouTubeChannelProvider.TEST_VIDEO_URL,
+                    TEST_VIDEO_URL,
                     ChannelType.YOUTUBE
                 )
             )

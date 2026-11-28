@@ -18,13 +18,16 @@ object ChannelsProvider {
     private const val CHANNELS_URL =
         "https://raw.githubusercontent.com/erihucor/tv-accesible-reto-ANDROID/refs/heads/main/channels.json"
     private const val CHANNELS_ASSET = "channels.json"
-    private val dailyYouTubeChannelProvider = DailyYouTubeChannelProvider()
+    private val youtubeSearchClient = YouTubeSearchClient()
+    private val blnYouTubeChannelProvider = BlnYouTubeChannelProvider(
+        searchVideoUrl = youtubeSearchClient::searchVideoUrl
+    )
     private val channelRepository = ChannelRepository(
-        providers = listOf(dailyYouTubeChannelProvider)
+        providers = listOf(blnYouTubeChannelProvider)
     )
 
-    val dailyVideoSearchTerm: String
-        get() = dailyYouTubeChannelProvider.searchTerm
+    val blnVideoSearchTerm: String
+        get() = BlnYouTubeChannelProvider.BLN_SEARCH_TERM
 
     fun getFallbackWarningMessage(): String =
         "No se pudieron obtener los canales en línea. Se están usando los canales locales."

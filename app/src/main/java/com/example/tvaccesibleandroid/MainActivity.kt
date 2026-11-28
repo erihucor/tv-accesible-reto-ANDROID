@@ -96,7 +96,7 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             Log.i(
                 CHANNEL_REFRESH_LOG_TAG,
-                "Iniciando búsqueda de video en YouTube: ${ChannelsProvider.dailyVideoSearchTerm}"
+                "Iniciando búsqueda de video en YouTube: ${ChannelsProvider.blnVideoSearchTerm}"
             )
             val usedFallback = ChannelsProvider.loadChannels(assets)
             channels = ChannelsProvider.channels
